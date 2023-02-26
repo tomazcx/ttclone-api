@@ -1,0 +1,36 @@
+version: "3"
+
+services:
+  app:
+    build: .
+    container_name: ttcloneapi-app
+    volumes:
+      - .:/home/node/app
+    depends_on:
+      - db
+      - redis
+    ports:
+      - "3000:3000"
+
+  db:
+    build: .docker/mysql
+    container_name: ttcloneapi-db
+    volumes:
+      - .docker/dbdata:/var/lib/mysql
+    restart: always
+    tty: true
+    environment:
+      MYSQL_DATABASE: 'ttclone'
+      MYSQL_USER: 'admin'
+      MYSQL_PASSWORD: 'admin'
+      MYSQL_ROOT_PASSWORD: 'admin'
+    ports:
+      - "3306:3306"
+    expose:
+      - "3306"
+
+  redis:
+    image: "bitnami/redis:latest"
+    container_name: ttcloneapi-redis
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes

@@ -1,0 +1,53 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(uuid())
+  name         String
+  email        String   @unique
+  user         String   @unique
+  password     String
+  image        String?
+  banner       String?
+  localization String?
+  desc         String?
+  created_at   DateTime
+
+  followedBy UserFollowers[] @relation("followed_by")
+  following  UserFollowers[] @relation("follower")
+
+  tweets Tweet[] @relation("tweetedBy")
+
+  @@map("users")
+}
+
+model UserFollowers {
+  id         String   @id @default(uuid())
+  userId     String
+  followerId String
+  created_at DateTime
+
+  user     User @relation("followed_by", fields: [userId], references: [id])
+  follower User @relation("follower", fields: [followerId], references: [id])
+
+  @@map("user_followers")
+}
+
+model Tweet {
+  id      String @id @default(uuid())
+  userId  String
+  content String
+
+  user User @relation("tweetedBy", fields: [userId], references: [id])
+
+  @@map("tweets")
+}
