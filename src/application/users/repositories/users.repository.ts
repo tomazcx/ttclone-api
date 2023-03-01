@@ -29,16 +29,10 @@ export class UsersRepository implements AbstractUsersRepository {
 	}
 
 	public async showFollowers(id: string): Promise<User[]> {
-		const followers = await this.prisma.user.findMany({
-			where: {
-				followedBy: {
-					every: {
-						userId: id
-					}
-				}
-			}
-		})
-		return followers
+		const followers = await this.prisma.$queryRaw`
+			SELECT users.* FROM users JOIN user_followers ON users.id = user_followers.followerId WHERE user_followers.userId = ${id}
+		`
+		return followers as any
 	}
 
 	public async showFollowing(id: string): Promise<User[]> {

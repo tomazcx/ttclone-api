@@ -1,4 +1,5 @@
 export abstract class User {
+	id: string
 	name: string
 	email: string
 	user: string

@@ -6,6 +6,6 @@ import {PrismaService} from 'src/external/services/prisma.service';
 
 @Module({
 	providers: [SignInService, ValidateUserService, AuthRepository, PrismaService],
-	exports: [SignInService, ValidateUserService, AuthRepository]
+	exports: [SignInService, ValidateUserService, AuthRepository, PrismaService]
 })
 export class AuthServicesModule {}

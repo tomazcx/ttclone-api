@@ -1,3 +1,3 @@
 export abstract class AbstractUnfollow {
-	abstract execute(id: string): Promise<void>
+	abstract execute(id: string, unfollowId: string): Promise<void>
 }

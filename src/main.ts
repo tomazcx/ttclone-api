@@ -4,6 +4,7 @@ import 'dotenv/config'
 import {ValidationPipe} from '@nestjs/common';
 import {NotFoundInterceptor} from './infra/common/errors/interceptors/not-found.interceptor';
 import {BadRequestInterceptor} from './infra/common/errors/interceptors/bad-request.interceptor';
+import {UnprocessableEntityInterceptor} from './infra/common/errors/interceptors/unprocessable-entity.interceptor';
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
@@ -15,6 +16,7 @@ async function bootstrap() {
 
 	app.useGlobalInterceptors(new NotFoundInterceptor())
 	app.useGlobalInterceptors(new BadRequestInterceptor())
+	app.useGlobalInterceptors(new UnprocessableEntityInterceptor())
 
 	await app.listen(3000);
 }
