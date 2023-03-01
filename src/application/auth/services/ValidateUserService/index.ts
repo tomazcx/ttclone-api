@@ -1,5 +1,4 @@
-import {Inject, Injectable} from "@nestjs/common";
-import {NotFoundError} from "src/infra/common/errors/types/NotFoundError";
+import {Inject, Injectable, NotFoundException} from "@nestjs/common";
 import {AbstractValidateUser} from "src/domain/auth/services/abstract-validate-user.service";
 import {User} from "src/domain/users/entities/User";
 import {AuthRepository} from "../../repositories/auth.repository";
@@ -14,7 +13,7 @@ export class ValidateUserService implements AbstractValidateUser {
 		const user = await this.authRepository.checkId(id)
 
 		if (!user) {
-			throw new NotFoundError('User not found')
+			throw new NotFoundException('User with the authenticated jwt was not found')
 		}
 
 		return user

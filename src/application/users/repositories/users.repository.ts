@@ -32,21 +32,15 @@ export class UsersRepository implements AbstractUsersRepository {
 		const followers = await this.prisma.$queryRaw`
 			SELECT users.* FROM users JOIN user_followers ON users.id = user_followers.followerId WHERE user_followers.userId = ${id}
 		`
-		return followers as any
+		return followers as User[]
 	}
 
 	public async showFollowing(id: string): Promise<User[]> {
-		const following = await this.prisma.user.findMany({
-			where: {
-				following: {
-					every: {
-						followerId: id
-					}
-				}
-			}
-		})
+		const followers = await this.prisma.$queryRaw`
+			SELECT users.* FROM users JOIN user_followers ON users.id = user_followers.userId WHERE user_followers.followerId = ${id}
+		`
 
-		return following
+		return followers as User[]
 
 	}
 
@@ -88,12 +82,12 @@ export class UsersRepository implements AbstractUsersRepository {
 		})
 	}
 
-	public async unfollow(userId: string, followerId: string): Promise<void> {
+	public async unfollow(userToUnfollowId: string, unfollowerId: string): Promise<void> {
 		await this.prisma.user.update({
-			where: {id: followerId},
+			where: {id: unfollowerId},
 			data: {
 				following: {
-					disconnect: {id: userId}
+					disconnect: {id: userToUnfollowId}
 				}
 			}
 		})

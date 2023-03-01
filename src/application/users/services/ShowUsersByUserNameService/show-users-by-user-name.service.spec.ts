@@ -13,7 +13,7 @@ describe('ShowUsersByUserNameService', () => {
 		id = uuid()
 	})
 
-	it('should show create a new user', async () => {
+	it('should show a user array', async () => {
 
 		const expectedOutput = [{
 			id,
@@ -37,7 +37,6 @@ describe('ShowUsersByUserNameService', () => {
 		expect(result).toStrictEqual(expectedOutput)
 
 	})
-
 
 })
 
