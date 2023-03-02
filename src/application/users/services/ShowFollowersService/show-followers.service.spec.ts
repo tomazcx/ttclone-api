@@ -14,7 +14,7 @@ describe('ShowFollowersService', () => {
 		id = uuid()
 	})
 
-	it('should show create a new user', async () => {
+	it('should show user followers', async () => {
 
 		const expectedOutput = [{
 			id,
@@ -27,7 +27,7 @@ describe('ShowFollowersService', () => {
 
 		const mockUsersRepository = {
 			showFollowers: jest.fn().mockReturnValue(Promise.resolve(expectedOutput)),
-			showUser: jest.fn().mockReturnValue(Promise.resolve(expectedOutput[0]))
+			checkId: jest.fn().mockReturnValue(Promise.resolve(true))
 		}
 
 		//@ts-expect-error defined part of methods
@@ -42,7 +42,7 @@ describe('ShowFollowersService', () => {
 
 	it('should fail due to not found user', async () => {
 		const mockUsersRepository = {
-			showUser: jest.fn().mockReturnValue(Promise.resolve(undefined))
+			checkId: jest.fn().mockReturnValue(Promise.resolve(false))
 		}
 
 		//@ts-expect-error defined part of methods

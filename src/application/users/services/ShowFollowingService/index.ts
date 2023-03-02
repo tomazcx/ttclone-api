@@ -12,7 +12,7 @@ export class ShowFollowingService implements AbstractShowFollowing {
 
 	public async execute(id: string): Promise<User[]> {
 
-		const userExists = await this.usersRepository.showUser(id)
+		const userExists = await this.usersRepository.checkId(id)
 
 		if (!userExists) {
 			throw new NotFoundError("User not found")

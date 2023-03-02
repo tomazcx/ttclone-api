@@ -23,7 +23,8 @@ describe('ValidateUserService', () => {
 		}
 
 		const mockAuthRepository = {
-			checkId: jest.fn().mockReturnValue(Promise.resolve(expectedOutput))
+			checkId: jest.fn().mockReturnValue(Promise.resolve(true)),
+			showUser: jest.fn().mockReturnValue(Promise.resolve(expectedOutput)),
 		}
 
 		//@ts-expect-error defined part of methods
@@ -38,7 +39,7 @@ describe('ValidateUserService', () => {
 
 	it("should throw a exception due to not found id", async () => {
 		const mockAuthRepository = {
-			checkId: jest.fn().mockReturnValue(Promise.resolve(undefined))
+			checkId: jest.fn().mockReturnValue(Promise.resolve(false))
 		}
 
 		//@ts-expect-error defined part of methods

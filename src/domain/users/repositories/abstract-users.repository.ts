@@ -9,8 +9,10 @@ export abstract class AbstractUsersRepository {
 	abstract showFollowers(id: string): Promise<User[]>
 	abstract showFollowing(id: string): Promise<User[]>
 	abstract checkUserName(user: string): Promise<boolean>
+	abstract checkId(id: string): Promise<boolean>
 	abstract checkEmail(email: string): Promise<boolean>
 	abstract createUser(createUserDto: CreateUserDto): Promise<User>
+	abstract verifyUserFollowing(id: string, userThatIsFollowing: string): Promise<boolean>
 	abstract follow(userId: string, followerId: string): Promise<void>
 	abstract unfollow(userId: string, followerId: string): Promise<void>
 	abstract updatePassword(password: string, id: string): Promise<User>

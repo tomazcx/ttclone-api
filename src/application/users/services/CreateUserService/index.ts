@@ -13,6 +13,10 @@ export class CreateUserService implements AbstractCreateUser {
 	private usersRepository: UsersRepository
 
 	public async execute(createUserDto: CreateUserDto): Promise<User> {
+		if (createUserDto.user.charAt(0) !== '@') {
+			createUserDto.user = `@${createUserDto.user}`
+		}
+
 		const emailIsRegistered = await this.usersRepository.checkEmail(createUserDto.email)
 
 		if (emailIsRegistered) {

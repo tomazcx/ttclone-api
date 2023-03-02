@@ -3,6 +3,7 @@ import {NotFoundError} from "src/infra/common/errors/types/NotFoundError";
 import {AbstractFollow} from "src/domain/users/services/abstract-follow.service";
 import {UsersRepository} from "../../repositories/users.repository";
 import {UnprocessableEntityError} from "src/infra/common/errors/types/UnprocessableEntityError";
+import {BadRequestError} from "src/infra/common/errors/types/BadRequestError";
 
 @Injectable()
 export class FollowService implements AbstractFollow {
@@ -16,8 +17,8 @@ export class FollowService implements AbstractFollow {
 			throw new UnprocessableEntityError("Can't follow your own account")
 		}
 
-		const userToFollow = await this.usersRepository.showUser(userToFollowId)
-		const follower = await this.usersRepository.showUser(followerId)
+		const userToFollow = await this.usersRepository.checkId(userToFollowId)
+		const follower = await this.usersRepository.checkId(followerId)
 
 		if (!userToFollow) {
 			throw new NotFoundError('User to follow not found')
@@ -27,6 +28,11 @@ export class FollowService implements AbstractFollow {
 			throw new NotFoundError('User not found')
 		}
 
+		const isFollowingUser = await this.usersRepository.verifyUserFollowing(followerId, userToFollowId)
+
+		if (isFollowingUser) {
+			throw new BadRequestError('You cannot follow someone you are already following')
+		}
 
 		await this.usersRepository.follow(userToFollowId, followerId)
 	}

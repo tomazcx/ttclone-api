@@ -11,13 +11,13 @@ export class ShowUserService implements AbstractShowUser {
 	private usersRepository: UsersRepository
 
 	public async execute(id: string): Promise<User> {
-		const user = await this.usersRepository.showUser(id)
+		const user = await this.usersRepository.checkId(id)
 
 		if (!user) {
 			throw new NotFoundError("User not found.")
 		}
 
-		return user
+		return await this.usersRepository.showUser(id)
 	}
 
 }

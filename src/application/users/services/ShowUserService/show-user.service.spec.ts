@@ -25,6 +25,7 @@ describe('ShowUserService', () => {
 		}
 
 		const mockUsersRepository = {
+			checkId: jest.fn().mockReturnValue(Promise.resolve(true)),
 			showUser: jest.fn().mockReturnValue(Promise.resolve(expectedOutput))
 		}
 
@@ -33,14 +34,14 @@ describe('ShowUserService', () => {
 
 		const result = await showUserService.execute(id)
 
-		expect(mockUsersRepository.showUser).toBeCalled()
+		expect(mockUsersRepository.checkId).toBeCalled()
 		expect(result).toStrictEqual(expectedOutput)
 
 	})
 
 	it('should fail due to not found id', async () => {
 		const mockUsersRepository = {
-			showUser: jest.fn().mockReturnValue(Promise.resolve(false))
+			checkId: jest.fn().mockReturnValue(Promise.resolve(false))
 		}
 
 		//@ts-expect-error defined part of methods

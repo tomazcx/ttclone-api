@@ -10,13 +10,14 @@ export class ValidateUserService implements AbstractValidateUser {
 	private authRepository: AuthRepository
 
 	public async execute(id: string): Promise<User> {
-		const user = await this.authRepository.checkId(id)
 
-		if (!user) {
+		const userExists = await this.authRepository.checkId(id)
+
+		if (!userExists) {
 			throw new NotFoundException('User with the authenticated jwt was not found')
 		}
 
-		return user
+		return await this.authRepository.showUser(id)
 	}
 
 }

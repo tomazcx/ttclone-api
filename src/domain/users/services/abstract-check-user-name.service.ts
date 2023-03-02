@@ -1,3 +1,5 @@
-export abstract class AbstracrCheckUserName {
-	abstract execute(user: string): Promise<boolean>
+import {UserName} from "../entities/UserName";
+
+export abstract class AbstractCheckUserName {
+	abstract execute(user: string): Promise<UserName>
 }

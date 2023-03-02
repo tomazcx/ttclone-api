@@ -1,9 +1,11 @@
 import {Injectable} from "@nestjs/common";
+import {PreUser} from "src/domain/users/entities/PreUser";
 import {User} from "src/domain/users/entities/User";
 import {AbstractUsersRepository} from "src/domain/users/repositories/abstract-users.repository";
 import {PrismaService} from "src/external/services/prisma.service";
 import {CreateUserDto} from "../dto/create-user.dto";
 import {UpdateProfileDto} from "../dto/update-profile.dto";
+import {excludeField} from "../utils/exclude-field.util";
 
 
 @Injectable()
@@ -11,9 +13,15 @@ export class UsersRepository implements AbstractUsersRepository {
 
 	constructor(private readonly prisma: PrismaService) {}
 
+	public async checkId(id: string): Promise<boolean> {
+		const user = await this.prisma.user.findFirst({where: {id}})
+		return !!user
+	}
+
 	public async showUser(id: string): Promise<User> {
 		const user = await this.prisma.user.findFirst({where: {id}})
-		return user
+		const formatedUser = excludeField(user, ['password'])
+		return formatedUser
 	}
 
 	public async showUsersByUserName(user: string): Promise<User[]> {
@@ -23,24 +31,29 @@ export class UsersRepository implements AbstractUsersRepository {
 					contains: user
 				}
 			}
-		})
+		}) as PreUser[]
 
-		return users
+		const formatedUsers = users.map(user => excludeField(user, ['password']))
+		return formatedUsers
 	}
 
 	public async showFollowers(id: string): Promise<User[]> {
 		const followers = await this.prisma.$queryRaw`
 			SELECT users.* FROM users JOIN user_followers ON users.id = user_followers.followerId WHERE user_followers.userId = ${id}
-		`
-		return followers as User[]
+		` as PreUser[]
+		const formatedFollowers = followers.map(follower => excludeField(follower, ['password']))
+
+		return formatedFollowers as User[]
 	}
 
 	public async showFollowing(id: string): Promise<User[]> {
-		const followers = await this.prisma.$queryRaw`
+		const following = await this.prisma.$queryRaw`
 			SELECT users.* FROM users JOIN user_followers ON users.id = user_followers.userId WHERE user_followers.followerId = ${id}
-		`
+		` as PreUser[]
 
-		return followers as User[]
+		const formatedFOllowing = following.map(follower => excludeField(follower, ['password']))
+
+		return formatedFOllowing as User[]
 
 	}
 
@@ -63,8 +76,20 @@ export class UsersRepository implements AbstractUsersRepository {
 				password,
 				created_at: new Date()
 			}
-		})
-		return userEntity
+		}) as PreUser
+		const userWithoutPassword = excludeField(userEntity, ['password'])
+		return userWithoutPassword
+	}
+
+	public async verifyUserFollowing(id: string, userThatIsFollowing: string): Promise<boolean> {
+
+		const user = await this.prisma.$queryRaw`
+			SELECT users.* FROM users JOIN user_followers ON users.id = user_followers.userId WHERE user_followers.followerId = ${id} AND users.id = ${userThatIsFollowing}
+		` as []
+
+
+		return user.length > 0 ? true : false
+
 	}
 
 
@@ -87,7 +112,7 @@ export class UsersRepository implements AbstractUsersRepository {
 			where: {id: unfollowerId},
 			data: {
 				following: {
-					disconnect: {id: userToUnfollowId}
+					deleteMany: {userId: userToUnfollowId}
 				}
 			}
 		})
@@ -99,7 +124,8 @@ export class UsersRepository implements AbstractUsersRepository {
 			data: {password}
 		})
 
-		return user
+		const userWithoutPassword = excludeField(user, ['password'])
+		return userWithoutPassword
 	}
 
 	public async updateProfile(updateProfileDto: UpdateProfileDto, id: string): Promise<User> {
@@ -107,17 +133,21 @@ export class UsersRepository implements AbstractUsersRepository {
 			where: {id},
 			data: updateProfileDto
 		})
-		return user
+		const userWithoutPassword = excludeField(user, ['password'])
+		return userWithoutPassword
 	}
 
 
 	public async updateUserName(user: string, id: string): Promise<User> {
 		const userEntity = await this.prisma.user.update({
 			where: {id},
-			data: user
+			data: {
+				user
+			}
 		})
 
-		return userEntity
+		const userWithoutPassword = excludeField(userEntity, ['password'])
+		return userWithoutPassword
 	}
 
 
@@ -127,7 +157,8 @@ export class UsersRepository implements AbstractUsersRepository {
 			data: {image}
 		})
 
-		return user
+		const userWithoutPassword = excludeField(user, ['password'])
+		return userWithoutPassword
 	}
 
 	public async updateBanner(banner: string, id: string): Promise<User> {
@@ -136,10 +167,22 @@ export class UsersRepository implements AbstractUsersRepository {
 			data: {banner}
 		})
 
-		return user
+		const userWithoutPassword = excludeField(user, ['password'])
+		return userWithoutPassword
 	}
 
 	public async deleteUser(id: string): Promise<void> {
+		await this.prisma.user.update({
+			where: {id},
+			data: {
+				followedBy: {
+					deleteMany: {}
+				},
+				following: {
+					deleteMany: {}
+				}
+			}
+		})
 		await this.prisma.user.delete({where: {id}})
 	}
 }
