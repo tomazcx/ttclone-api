@@ -1,5 +1,5 @@
 import {User} from '../entities/User'
 
 export abstract class AbstractUpdateImage {
-	abstract execute(image: string): Promise<User>
+	abstract execute(image: string, id: string): Promise<User>
 }

@@ -3,6 +3,8 @@
 /node_modules
 .docker/dbdata
 .env
+/temp/uploads/*
+!/temp/uploads/.gitkeep
 
 # Logs
 logs
