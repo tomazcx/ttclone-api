@@ -2,8 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
-binaryTargets = ["linux-musl-openssl-3.0.x"]
+  provider      = "prisma-client-js"
+  binaryTargets = ["linux-musl-openssl-3.0.x"]
 }
 
 datasource db {
@@ -21,6 +21,7 @@ model User {
   banner       String?
   localization String?
   desc         String?
+  url          String?
   created_at   DateTime
 
   followedBy UserFollowers[] @relation("followed_by")

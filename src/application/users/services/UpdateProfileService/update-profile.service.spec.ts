@@ -19,7 +19,8 @@ describe('UpdateProfileService', () => {
 			email: 'test@email.com',
 			user: '@test',
 			desc: 'test-desc',
-			localization: 'test-localization'
+			localization: 'test-localization',
+			url: 'test.url'
 		}
 
 		const mockUsersRepository = {
@@ -33,7 +34,8 @@ describe('UpdateProfileService', () => {
 		const updateProfileDto = {
 			name: 'updated-name',
 			desc: 'test-desc',
-			localization: 'test-localization'
+			localization: 'test-localization',
+			url: 'test.url'
 		}
 
 		const result = await service.execute(updateProfileDto, id)
@@ -55,7 +57,9 @@ describe('UpdateProfileService', () => {
 		const updateProfileDto = {
 			name: 'updated-name',
 			desc: 'test-desc',
-			localization: 'test-localization'
+			localization: 'test-localization',
+			url: 'test.url'
+
 		}
 
 		await expect(service.execute(updateProfileDto, id)).rejects.toBeInstanceOf(NotFoundError)

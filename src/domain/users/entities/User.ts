@@ -7,6 +7,7 @@ export abstract class User {
 	banner?: string
 	localization?: string
 	desc?: string
+	url?: string
 	created_at: Date
 
 }

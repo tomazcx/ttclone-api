@@ -4,7 +4,7 @@
 .docker/dbdata
 .env
 /temp/uploads/*
-!/temp/uploads/.gitkeep
+!temp/uploads/.gitkeep
 
 # Logs
 logs

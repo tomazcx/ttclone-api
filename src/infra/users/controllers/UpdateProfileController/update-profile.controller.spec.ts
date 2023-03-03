@@ -36,7 +36,8 @@ describe('UpdateProfileController', () => {
 		const updateProfileDto = {
 			name: 'test-name',
 			desc: 'test-desc',
-			localization: 'test-localization'
+			localization: 'test-localization',
+			url: 'test.url'
 		}
 
 		jest.spyOn(service, 'execute').mockImplementationOnce(() => Promise.resolve({} as User))
@@ -48,7 +49,8 @@ describe('UpdateProfileController', () => {
 		const updateProfileDto = {
 			name: 'test-name',
 			desc: 'test-desc',
-			localization: 'test-localization'
+			localization: 'test-localization',
+			url: 'test.url'
 		}
 
 		jest.spyOn(service, 'execute').mockImplementationOnce(() => {throw new NotFoundException})

@@ -1,4 +1,4 @@
-import {IsString} from "class-validator";
+import {IsString, IsUrl} from "class-validator";
 
 export class UpdateProfileDto {
 
@@ -10,4 +10,8 @@ export class UpdateProfileDto {
 
 	@IsString()
 	localization?: string
+
+	@IsString()
+	@IsUrl()
+	url?: string
 }
