@@ -57,6 +57,11 @@ export class UsersRepository implements AbstractUsersRepository {
 
 	}
 
+	public async getPassword(id: string): Promise<string> {
+		const user = await this.prisma.user.findFirst({where: {id}})
+		return user.password
+	}
+
 	public async checkUserName(user: string): Promise<boolean> {
 		const userEntity = await this.prisma.user.findFirst({where: {user}})
 		return !!userEntity

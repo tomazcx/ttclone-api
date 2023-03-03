@@ -3,11 +3,11 @@ import {IsString} from "class-validator";
 export class UpdateProfileDto {
 
 	@IsString()
-	name: string
+	name?: string
 
 	@IsString()
-	description: string
+	desc?: string
 
 	@IsString()
-	localization: string
+	localization?: string
 }

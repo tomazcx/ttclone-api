@@ -9,11 +9,13 @@ import {ShowFollowingService} from "src/application/users/services/ShowFollowing
 import {ShowUsersByUserNameService} from "src/application/users/services/ShowUsersByUserNameService";
 import {ShowUserService} from "src/application/users/services/ShowUserService";
 import {UnfollowService} from "src/application/users/services/UnfollowService";
+import {UpdatePasswordService} from "src/application/users/services/UpdatePasswordService";
+import {UpdateProfileService} from "src/application/users/services/UpdateProfileService";
 import {UpdateUserNameService} from "src/application/users/services/UpdateUserNameService";
 import {PrismaService} from "src/external/services/prisma.service";
 
 @Module({
-	providers: [ShowUserService, CreateUserService, ShowFollowersService, ShowFollowingService, FollowService, UnfollowService, ShowUsersByUserNameService, UpdateUserNameService, CheckUserNameService, DeleteUserService, UsersRepository, PrismaService],
-	exports: [ShowUserService, CreateUserService, ShowFollowersService, ShowFollowingService, FollowService, UnfollowService, ShowUsersByUserNameService, UpdateUserNameService, CheckUserNameService, DeleteUserService, UsersRepository, PrismaService]
+	providers: [ShowUserService, CreateUserService, ShowFollowersService, ShowFollowingService, FollowService, UnfollowService, ShowUsersByUserNameService, UpdateUserNameService, CheckUserNameService, DeleteUserService, UpdateProfileService, UpdatePasswordService, UsersRepository, PrismaService],
+	exports: [ShowUserService, CreateUserService, ShowFollowersService, ShowFollowingService, FollowService, UnfollowService, ShowUsersByUserNameService, UpdateUserNameService, CheckUserNameService, DeleteUserService, UpdateProfileService, UpdatePasswordService, UsersRepository, PrismaService]
 })
 export class UserServicesModule {}

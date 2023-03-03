@@ -10,12 +10,14 @@ import {ShowFollowingController} from '../controllers/ShowFollowingController';
 import {ShowUsersByUserNameController} from '../controllers/ShowUserByUserNameController';
 import {ShowUserController} from '../controllers/ShowUserController';
 import {UnfollowController} from '../controllers/UnfollowController';
+import {UpdatePasswordController} from '../controllers/UpdatePasswordController';
+import {UpdateProfileController} from '../controllers/UpdateProfileController';
 import {UpdateUserNameController} from '../controllers/UpdateUserNameController';
 import {UserServicesModule} from './users-services.module';
 
 @Module({
 	imports: [UserServicesModule, AuthControllersModule],
-	controllers: [ShowUserController, CreateUserController, FollowController, ShowFollowersController, ShowFollowingController, ShowUsersByUserNameController, UnfollowController, UpdateUserNameController, CheckUserNameController, DeleteUserController],
+	controllers: [ShowUserController, CreateUserController, FollowController, ShowFollowersController, ShowFollowingController, ShowUsersByUserNameController, UnfollowController, UpdateUserNameController, CheckUserNameController, DeleteUserController, UpdateProfileController, UpdatePasswordController],
 
 })
 export class UsersModule implements NestModule {
