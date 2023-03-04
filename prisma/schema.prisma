@@ -1,4 +1,4 @@
-// This is your Prisma schema file,
+// This is your Prisma schema filek
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
@@ -27,7 +27,10 @@ model User {
   followedBy UserFollowers[] @relation("followed_by")
   following  UserFollowers[] @relation("follower")
 
-  tweets Tweet[] @relation("tweetedBy")
+  tweets          Tweet[]           @relation("tweetedBy")
+  likedTweets     UsersLikes[]      @relation("liked_by")
+  savedTweets     UserSavedTweets[] @relation("saved_by")
+  tweetsRetweeted UserRetweets[]    @relation("retweeted_by")
 
   @@map("users")
 }
@@ -44,12 +47,55 @@ model UserFollowers {
   @@map("user_followers")
 }
 
-model Tweet {
-  id      String @id @default(uuid())
-  userId  String
-  content String
+model UserSavedTweets {
+  id         String   @id @default(uuid())
+  userId     String
+  tweetId    String
+  created_at DateTime
 
-  user User @relation("tweetedBy", fields: [userId], references: [id])
+  user       User  @relation("saved_by", fields: [userId], references: [id])
+  savedTweet Tweet @relation("saved_by", fields: [tweetId], references: [id])
+
+  @@map("user_saved_tweets")
+}
+
+model UserRetweets {
+  id         String   @id @default(uuid())
+  userId     String
+  tweetId    String
+  content    String?  @db.VarChar(280)
+  created_at DateTime
+
+  user       User  @relation("retweeted_by", fields: [userId], references: [id])
+  savedTweet Tweet @relation("retweeted_by", fields: [tweetId], references: [id])
+
+  @@map("users_retweets")
+}
+
+model UsersLikes {
+  id         String   @id @default(uuid())
+  userId     String
+  tweetId    String
+  created_at DateTime
+
+  user  User  @relation("liked_by", fields: [userId], references: [id])
+  tweet Tweet @relation("liked_by", fields: [tweetId], references: [id])
+}
+
+model Tweet {
+  id         String   @id @default(uuid())
+  authorId   String
+  content    String   @db.VarChar(280)
+  replyId    String?  @unique
+  created_at DateTime
+
+  repliesTo Tweet?  @relation("replies_to", fields: [replyId], references: [id])
+  replies   Tweet[] @relation("replies_to")
+
+  author            User              @relation("tweetedBy", fields: [authorId], references: [id])
+  usersWhoLiked     UsersLikes[]      @relation("liked_by")
+  usersWhoSaved     UserSavedTweets[] @relation("saved_by")
+  usersWhoRetweeted UserRetweets[]    @relation("retweeted_by")
 
   @@map("tweets")
 }
