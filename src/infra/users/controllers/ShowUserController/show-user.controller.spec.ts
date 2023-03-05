@@ -2,10 +2,16 @@ import {Test, TestingModule} from '@nestjs/testing';
 import {ShowUserService} from 'src/application/users/services/ShowUserService';
 import {ShowUserController} from '.'
 import {v4 as uuid} from 'uuid'
+import {INestApplication} from '@nestjs/common';
+import {NotFoundInterceptor} from 'src/infra/common/errors/interceptors/not-found.interceptor';
+import {User} from "src/domain/users/entities/User"
+import * as request from 'supertest'
+import {NotFoundError} from "src/infra/common/errors/types/NotFoundError"
 
 describe('ShowUserController', () => {
 	let controller: ShowUserController;
 	let showUserService: ShowUserService
+	let app: INestApplication
 	let id: string
 
 	beforeEach(async () => {
@@ -19,8 +25,14 @@ describe('ShowUserController', () => {
 			}]
 		}).compile();
 
+		app = module.createNestApplication()
+		app.useGlobalInterceptors(new NotFoundInterceptor)
+
 		controller = module.get<ShowUserController>(ShowUserController);
 		showUserService = module.get<ShowUserService>(ShowUserService)
+
+		await app.init()
+
 		id = uuid()
 	});
 
@@ -28,20 +40,19 @@ describe('ShowUserController', () => {
 		expect(controller).toBeDefined();
 	});
 
-	it('should return OK', async () => {
+	it('should return 200 status', async () => {
+		jest.spyOn(showUserService, 'execute').mockImplementationOnce(() => Promise.resolve({} as User))
 
-		const expectedOutput = {
-			id,
-			name: 'test-name',
-			email: 'test@email.com',
-			created_at: new Date(),
-			user: '@test'
-		}
+		await request(app.getHttpServer()).get(`/users/${id}`).expect(200)
+	})
 
-		jest.spyOn(showUserService, 'execute').mockImplementationOnce(() => Promise.resolve(expectedOutput))
+	it('should return a 404 exception', async () => {
+		jest.spyOn(showUserService, 'execute').mockImplementationOnce(() => {throw new NotFoundError})
 
-		const result = await controller.handle(id)
+		await request(app.getHttpServer()).get(`/users/${id}`).expect(404)
+	})
 
-		expect(result).toStrictEqual(expectedOutput)
+	afterAll(() => {
+		app.close()
 	})
 });

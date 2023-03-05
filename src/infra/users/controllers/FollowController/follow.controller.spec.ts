@@ -2,31 +2,65 @@ import {Test, TestingModule} from "@nestjs/testing"
 import {FollowService} from "src/application/users/services/FollowService"
 import {FollowController} from "."
 import {v4 as uuid} from 'uuid'
-import {UnprocessableEntityException} from "@nestjs/common"
+import {INestApplication} from "@nestjs/common"
+import {JwtModule} from "@nestjs/jwt"
+import 'dotenv/config'
+import * as request from 'supertest'
+import {ValidateUserService} from "src/application/auth/services/ValidateUserService"
+import {JwtStrategy} from "src/infra/auth/strategies/jwt.strategy"
+import {NotFoundInterceptor} from "src/infra/common/errors/interceptors/not-found.interceptor"
+import {UnprocessableEntityError} from "src/infra/common/errors/types/UnprocessableEntityError"
+import {UnprocessableEntityInterceptor} from "src/infra/common/errors/interceptors/unprocessable-entity.interceptor"
+import {NotFoundError} from "src/infra/common/errors/types/NotFoundError"
+import {generateJwt} from "src/application/auth/utils/generate-jwt.util"
 
 describe('FollowController', () => {
 
 	let followController: FollowController
 	let followService: FollowService
+	let app: INestApplication
 	let id: string
-	let req: {user: string}
+	let token: string
 
 	beforeEach(async () => {
+		id = uuid()
+		token = generateJwt(id)
 
 		const module: TestingModule = await Test.createTestingModule({
+			imports: [
+				JwtModule.register({
+					secret: process.env.JWT_SECRET,
+					signOptions: {
+						expiresIn: process.env.JWT_EXPIRES_IN
+					}
+				})
+			],
 			providers: [{
 				provide: FollowService,
 				useValue: {
 					execute: (x => x)
 				}
-			}],
+			},
+			{
+				provide: ValidateUserService,
+				useValue: {
+					execute: () => Promise.resolve({id})
+				}
+			},
+				JwtStrategy
+			],
 			controllers: [FollowController]
 		}).compile()
 
 		followController = module.get<FollowController>(FollowController)
 		followService = module.get<FollowService>(FollowService)
-		id = uuid()
-		req = {user: uuid()}
+
+		app = module.createNestApplication()
+		app.useGlobalInterceptors(new NotFoundInterceptor)
+		app.useGlobalInterceptors(new UnprocessableEntityInterceptor)
+
+		await app.init()
+
 	})
 
 	it('should be defined', () => {
@@ -36,15 +70,29 @@ describe('FollowController', () => {
 	it('should be able to return 204', async () => {
 		jest.spyOn(followService, 'execute').mockReturnValueOnce(Promise.resolve())
 
-		await followController.handle(id, req)
+		await request(app.getHttpServer()).patch(`/users/follow/${id}`).set('Authorization', `Bearer: ${token}`).expect(204)
 
-		expect(followService.execute).toBeCalled()
 	})
 
-	it('should be able to throw unprocessable entity exception', async () => {
-		jest.spyOn(followService, 'execute').mockImplementationOnce(() => {throw new UnprocessableEntityException()})
+	it('should be able to return 422 exception', async () => {
+		jest.spyOn(followService, 'execute').mockImplementationOnce(() => {throw new UnprocessableEntityError()})
 
-		await expect(followController.handle(id, req)).rejects.toBeInstanceOf(UnprocessableEntityException)
+		await request(app.getHttpServer()).patch(`/users/follow/${id}`).set('Authorization', `Bearer: ${token}`).expect(422)
+	})
+
+	it('should return 404 exception', async () => {
+		jest.spyOn(followService, 'execute').mockImplementationOnce(() => {throw new NotFoundError()})
+
+		await request(app.getHttpServer()).patch(`/users/follow/${id}`).set('Authorization', `Bearer: ${token}`).expect(404)
+	})
+
+	it('should return 401 unauthorized exception', async () => {
+		await request(app.getHttpServer()).patch(`/users/follow/${id}`).expect(401)
+	})
+
+
+	afterAll(() => {
+		app.close()
 	})
 
 })

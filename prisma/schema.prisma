@@ -92,7 +92,7 @@ model Tweet {
   repliesTo Tweet?  @relation("replies_to", fields: [replyId], references: [id])
   replies   Tweet[] @relation("replies_to")
 
-  author            User              @relation("tweetedBy", fields: [authorId], references: [id])
+  author            User              @relation("tweetedBy", fields: [authorId], references: [id], onDelete: Cascade)
   usersWhoLiked     UsersLikes[]      @relation("liked_by")
   usersWhoSaved     UserSavedTweets[] @relation("saved_by")
   usersWhoRetweeted UserRetweets[]    @relation("retweeted_by")

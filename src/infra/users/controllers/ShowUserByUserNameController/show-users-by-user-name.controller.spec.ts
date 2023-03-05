@@ -2,11 +2,15 @@ import {Test, TestingModule} from "@nestjs/testing"
 import {ShowUsersByUserNameService} from "src/application/users/services/ShowUsersByUserNameService"
 import {ShowUsersByUserNameController} from "."
 import {v4 as uuid} from 'uuid'
+import {INestApplication} from "@nestjs/common"
+import * as request from 'supertest'
+import {User} from "src/domain/users/entities/User"
 
 describe("ShowUserByUserNameController", () => {
 
 	let controller: ShowUsersByUserNameController
 	let service: ShowUsersByUserNameService
+	let app: INestApplication
 	let id: string
 
 	beforeEach(async () => {
@@ -20,8 +24,13 @@ describe("ShowUserByUserNameController", () => {
 			}]
 		}).compile()
 
+		app = module.createNestApplication()
+
 		controller = module.get<ShowUsersByUserNameController>(ShowUsersByUserNameController)
 		service = module.get<ShowUsersByUserNameService>(ShowUsersByUserNameService)
+
+		await app.init()
+
 		id = uuid()
 	})
 
@@ -29,21 +38,14 @@ describe("ShowUserByUserNameController", () => {
 		expect(controller).toBeDefined()
 	})
 
-	it('should return profiles that matches the user string', async () => {
+	it('should return status of 200', async () => {
+		jest.spyOn(service, 'execute').mockImplementationOnce(() => Promise.resolve([] as User[]))
 
-		const expectedOutput = [{
-			id,
-			name: 'test-name',
-			email: 'test-email',
-			created_at: new Date(),
-			user: '@user'
-		}]
+		await request(app.getHttpServer()).get('/users/search/@user').expect(200)
+	})
 
-		jest.spyOn(service, 'execute').mockImplementationOnce(() => Promise.resolve(expectedOutput))
-
-		const result = await controller.handle('us')
-
-		expect(result).toStrictEqual(expectedOutput)
+	afterAll(() => {
+		app.close()
 	})
 
 

@@ -1,11 +1,14 @@
+import {INestApplication} from "@nestjs/common"
 import {Test, TestingModule} from "@nestjs/testing"
 import {CheckUserNameService} from "src/application/users/services/CheckUserNameService"
 import {CheckUserNameController} from "."
+import * as request from 'supertest'
 
 describe('CheckUserNameController', () => {
 
 	let controller: CheckUserNameController
 	let service: CheckUserNameService
+	let app: INestApplication
 
 	beforeEach(async () => {
 		const module: TestingModule = await Test.createTestingModule({
@@ -20,22 +23,30 @@ describe('CheckUserNameController', () => {
 
 		controller = module.get<CheckUserNameController>(CheckUserNameController)
 		service = module.get<CheckUserNameService>(CheckUserNameService)
+
+		app = module.createNestApplication()
+		await app.init()
 	})
 
-	it('should check the user name', async () => {
+	it('should be defined', () => {
+		expect(controller).toBeDefined()
+	})
+
+	it('should return 200 ', async () => {
 
 		const expectedOutput = {
-			user: 'user',
+			user: '@user',
 			available: false
 		}
 
 		jest.spyOn(service, 'execute').mockImplementationOnce(() => Promise.resolve(expectedOutput))
 
-		const result = await controller.handle('user')
+		await request(app.getHttpServer()).get('/users/isAvailable/user').expect(200)
 
-		expect(result).toStrictEqual(expectedOutput)
-		expect(service.execute).toBeCalled()
+	})
 
+	afterAll(() => {
+		app.close()
 	})
 
 })

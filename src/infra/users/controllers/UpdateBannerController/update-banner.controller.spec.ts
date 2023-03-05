@@ -1,50 +1,91 @@
-import {NotFoundException} from "@nestjs/common"
+import {INestApplication, NotFoundException} from "@nestjs/common"
 import {Test, TestingModule} from "@nestjs/testing"
 import {UpdateBannerService} from "src/application/users/services/UpdateBannerService"
 import {User} from "src/domain/users/entities/User"
 import {UpdateBannerController} from "."
 import {v4 as uuid} from 'uuid'
+import 'dotenv/config'
+import {ValidateUserService} from "src/application/auth/services/ValidateUserService"
+import {JwtStrategy} from "src/infra/auth/strategies/jwt.strategy"
+import * as request from 'supertest'
+import {generateJwt} from "src/application/auth/utils/generate-jwt.util"
+import {JwtModule} from "@nestjs/jwt"
+import {NotFoundInterceptor} from "src/infra/common/errors/interceptors/not-found.interceptor"
+import * as fs from 'fs'
+import {NotFoundError} from "src/infra/common/errors/types/NotFoundError"
 
 describe('UpdateBannerController', () => {
 
 	let controller: UpdateBannerController
 	let service: UpdateBannerService
-	let req: any
-	const file = {} as Express.Multer.File
+	let app: INestApplication
+	let id: string
+	let token: string
 
 	beforeEach(async () => {
+		id = uuid()
+		token = generateJwt(id)
+		fs.writeFileSync('./text.jpeg', '')
+
 		const module: TestingModule = await Test.createTestingModule({
+			imports: [
+				JwtModule.register({
+					secret: process.env.JWT_SECRET,
+					signOptions: {
+						expiresIn: process.env.JWT_EXPIRES_IN
+					}
+				})
+			],
 			controllers: [UpdateBannerController],
 			providers: [{
 				provide: UpdateBannerService,
 				useValue: {
 					execute: (x => x)
 				}
-			}]
+			},
+			{
+				provide: ValidateUserService,
+				useValue: {
+					execute: () => Promise.resolve({id})
+				}
+			},
+				JwtStrategy
+			]
 		}).compile()
+
+		app = module.createNestApplication()
+		app.useGlobalInterceptors(new NotFoundInterceptor)
 
 		controller = module.get<UpdateBannerController>(UpdateBannerController)
 		service = module.get<UpdateBannerService>(UpdateBannerService)
-		req = {user: uuid()}
-		file.filename = 'test.jpg'
+
+		await app.init()
 	})
 
 	it('should be defined', () => {
 		expect(controller).toBeDefined()
 	})
 
-	it("should update the user's banner", async () => {
+	it("should return 200 status", async () => {
 
 		jest.spyOn(service, 'execute').mockImplementationOnce(() => Promise.resolve({} as User))
 
-		await expect(controller.handle(file, req)).resolves.toBeTruthy()
+		await request(app.getHttpServer()).patch('/users/banner').attach('banner', Buffer.from('test image'), 'test.jpg').set('Authorization', `Bearer: ${token}`).expect(200)
 	})
 
-	it('should throw a not found exception', async () => {
+	it('should throw a 404 exception', async () => {
+		jest.spyOn(service, 'execute').mockImplementationOnce(() => {throw new NotFoundError})
 
-		jest.spyOn(service, 'execute').mockImplementationOnce(() => {throw new NotFoundException})
+		await request(app.getHttpServer()).patch('/users/banner').attach('banner', Buffer.from('test image'), 'test.jpg').set('Authorization', `Bearer: ${token}`).expect(404)
+	})
 
-		await expect(controller.handle(file, req)).rejects.toBeInstanceOf(NotFoundException)
+	it('should throw a 401 unauthorized exception', async () => {
+		await request(app.getHttpServer()).patch('/users/banner').expect(401)
+	})
+
+	afterAll(() => {
+		fs.rmSync('./text.jpeg')
+		app.close()
 	})
 
 })

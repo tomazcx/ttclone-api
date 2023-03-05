@@ -1,13 +1,17 @@
-import {BadRequestException} from "@nestjs/common"
+import {INestApplication} from "@nestjs/common"
 import {Test, TestingModule} from "@nestjs/testing"
 import {CreateUserService} from "src/application/users/services/CreateUserService"
 import {User} from "src/domain/users/entities/User"
 import {CreateUserController} from "."
+import * as request from 'supertest'
+import {BadRequestError} from "src/infra/common/errors/types/BadRequestError"
+import {BadRequestInterceptor} from "src/infra/common/errors/interceptors/bad-request.interceptor"
 
 describe('CreateUserController', () => {
 
 	let controller: CreateUserController
 	let createUserService: CreateUserService
+	let app: INestApplication
 
 	beforeEach(async () => {
 		const module: TestingModule = await Test.createTestingModule({
@@ -22,13 +26,20 @@ describe('CreateUserController', () => {
 
 		controller = module.get<CreateUserController>(CreateUserController)
 		createUserService = module.get<CreateUserService>(CreateUserService)
+
+		app = module.createNestApplication()
+
+		app.useGlobalInterceptors(new BadRequestInterceptor)
+
+		await app.init()
+
 	})
 
 	it('should be defined', () => {
 		expect(controller).toBeDefined()
 	})
 
-	it('should create a user', async () => {
+	it('should return status 201', async () => {
 
 		const createUserDto = {
 			name: 'test-name',
@@ -40,10 +51,10 @@ describe('CreateUserController', () => {
 
 		jest.spyOn(createUserService, 'execute').mockImplementationOnce(() => Promise.resolve({} as User))
 
-		await expect(controller.handle(createUserDto)).resolves.toBeTruthy()
+		await request(app.getHttpServer()).post('/users').send(createUserDto).expect(201)
 	})
 
-	it('should throw a bad request expection', async () => {
+	it('should throw a 400 exception', async () => {
 		const createUserDto = {
 			name: 'test-name',
 			email: 'registered@email.com',
@@ -52,9 +63,12 @@ describe('CreateUserController', () => {
 			user: '@user'
 		}
 
-		jest.spyOn(createUserService, 'execute').mockImplementationOnce(() => {throw new BadRequestException})
+		jest.spyOn(createUserService, 'execute').mockImplementationOnce(() => {throw new BadRequestError})
 
-		await expect(controller.handle(createUserDto)).rejects.toBeInstanceOf(BadRequestException)
+		await request(app.getHttpServer()).post('/users').send(createUserDto).expect(400)
 	})
 
+	afterAll(() => {
+		app.close()
+	})
 })
