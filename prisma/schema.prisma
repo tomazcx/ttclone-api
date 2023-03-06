@@ -67,7 +67,7 @@ model UserRetweets {
   created_at DateTime
 
   user       User  @relation("retweeted_by", fields: [userId], references: [id])
-  savedTweet Tweet @relation("retweeted_by", fields: [tweetId], references: [id])
+  tweet Tweet @relation("retweeted_by", fields: [tweetId], references: [id])
 
   @@map("users_retweets")
 }

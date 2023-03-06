@@ -13,7 +13,6 @@ export class DeleteTweetController {
 	@UseGuards(AuthGuard('jwt'))
 	@HttpCode(HttpStatus.NO_CONTENT)
 	async handle(@Param('id') id: string, @Request() req: any) {
-		console.log(req.user)
 		await this.deleteTweetService.execute(id, req.user)
 	}
 
