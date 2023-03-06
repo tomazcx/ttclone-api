@@ -22,4 +22,59 @@ export class TweetsRepository implements AbstractTweetsRepository {
 		return tweet
 	}
 
+	public async checkId(id: string): Promise<boolean> {
+		const tweet = await this.prisma.tweet.findFirst({
+			where: {id}
+		})
+
+		return !!tweet
+	}
+
+	//verify if the tweet belongs to the author
+	public async verifyAuthor(tweetId: string, authorId: string): Promise<boolean> {
+		const tweet = await this.prisma.tweet.findFirst({
+			where: {
+				id: tweetId,
+				AND: {
+					author: {
+						id: authorId
+					}
+				}
+			}
+		})
+
+		return !!tweet
+	}
+
+	public async showTweet(id: string): Promise<Tweet> {
+		const tweet = await this.prisma.tweet.findFirst({
+			where: {id}
+		})
+
+		return tweet
+	}
+
+	public async showUserTweets(userId: string): Promise<Tweet[]> {
+		const tweets = await this.prisma.tweet.findMany({
+			where: {
+				author: {
+					id: userId
+				},
+				OR: {
+					usersWhoRetweeted: {
+						every: {
+							id: userId
+						}
+					}
+				}
+			}
+		})
+
+		return tweets
+	}
+
+	public async delete(id: string): Promise<void> {
+		await this.prisma.tweet.delete({where: {id}})
+	}
+
 }

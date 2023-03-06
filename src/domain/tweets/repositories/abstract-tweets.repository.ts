@@ -5,6 +5,8 @@ import {User} from "src/domain/users/entities/User";
 
 export abstract class AbstractTweetsRepository {
 	abstract create(createTweetDto: CreateTweetDto, authorId: string): Promise<Tweet>
+	abstract verifyAuthor(tweetId: string, authorId: string): Promise<boolean>
+	abstract checkId(id: string): Promise<boolean>
 	abstract replyTweet(tweetId: string, authorId: string, createTweetDto: CreateTweetDto): Promise<Tweet>
 	abstract showTweet(id: string): Promise<Tweet>
 	abstract showFeed(userId: string): Promise<Tweet[]>
@@ -20,5 +22,5 @@ export abstract class AbstractTweetsRepository {
 	abstract removeRetweet(tweetId: string, userId: string): Promise<void>
 	abstract likeTweet(tweetId: string, userWhoLikesId: string): Promise<void>
 	abstract removeLikeTweet(tweetId: string, userWhoUnlikesId: string): Promise<void>
-	abstract delete(id: string): Promise<Tweet>
+	abstract delete(id: string): Promise<void>
 }
