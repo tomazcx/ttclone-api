@@ -1,10 +1,11 @@
 import {v4 as uuid} from 'uuid'
 import {ShowFollowersService} from '.'
 import {NotFoundError} from "src/infra/common/errors/types/NotFoundError"
+import {AbstractShowFollowers} from 'src/domain/users/services/abstract-show-followers.service'
 
 describe('ShowFollowersService', () => {
 
-	let showFollowersService: ShowFollowersService
+	let showFollowersService: AbstractShowFollowers
 	let date: Date
 	let id: string
 
@@ -30,7 +31,6 @@ describe('ShowFollowersService', () => {
 			checkId: jest.fn().mockReturnValue(Promise.resolve(true))
 		}
 
-		//@ts-expect-error defined part of methods
 		showFollowersService['usersRepository'] = mockUsersRepository
 
 		const result = await showFollowersService.execute('@test')
@@ -45,7 +45,6 @@ describe('ShowFollowersService', () => {
 			checkId: jest.fn().mockReturnValue(Promise.resolve(false))
 		}
 
-		//@ts-expect-error defined part of methods
 		showFollowersService['usersRepository'] = mockUsersRepository
 
 		await expect(showFollowersService.execute('@test')).rejects.toThrow(NotFoundError)

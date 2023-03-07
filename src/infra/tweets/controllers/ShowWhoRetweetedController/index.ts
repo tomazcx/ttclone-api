@@ -1,11 +1,11 @@
 import {Controller, Get, HttpCode, HttpStatus, Param} from "@nestjs/common";
-import {ShowWhoRetweetedService} from "src/application/tweets/services/ShowWhoRetweetedService";
+import {AbstractShowWhoRetweeted} from "src/domain/tweets/services/abstract-show-who-retweeted.service";
 
 @Controller('tweets')
 export class ShowWhoRetweetedController {
 
 	constructor(
-		private readonly showWhoRetweetedService: ShowWhoRetweetedService
+		private readonly showWhoRetweetedService: AbstractShowWhoRetweeted
 	) {}
 
 	@Get('/retweet/:id')

@@ -1,5 +1,4 @@
 import {Test, TestingModule} from "@nestjs/testing"
-import {CreateTweetService} from "src/application/tweets/services/CreateTweetService"
 import {v4 as uuid} from 'uuid'
 import * as request from 'supertest'
 import {INestApplication} from "@nestjs/common"
@@ -11,11 +10,12 @@ import {JwtModule} from "@nestjs/jwt"
 import 'dotenv/config'
 import {NotFoundError} from "src/infra/common/errors/types/NotFoundError"
 import {NotFoundInterceptor} from "src/infra/common/errors/interceptors/not-found.interceptor"
+import {AbstractCreateTweet} from "src/domain/tweets/services/abstract-create-tweet.service"
 
 describe('CreateTweetController', () => {
 
 	let controller: CreateTweetController
-	let service: CreateTweetService
+	let service: AbstractCreateTweet
 	let app: INestApplication
 	let authorId: string
 	let jwt: string
@@ -35,7 +35,7 @@ describe('CreateTweetController', () => {
 			controllers: [CreateTweetController],
 			providers: [
 				{
-					provide: CreateTweetService,
+					provide: AbstractCreateTweet,
 					useValue: {
 						execute: x => x
 					},
@@ -51,7 +51,7 @@ describe('CreateTweetController', () => {
 		}).compile()
 
 		controller = module.get<CreateTweetController>(CreateTweetController)
-		service = module.get<CreateTweetService>(CreateTweetService)
+		service = module.get<AbstractCreateTweet>(AbstractCreateTweet)
 
 		jwt = generateJwt(authorId)
 		app = module.createNestApplication()

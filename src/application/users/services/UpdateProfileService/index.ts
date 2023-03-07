@@ -3,13 +3,13 @@ import {NotFoundError} from "src/infra/common/errors/types/NotFoundError";
 import {User} from "src/domain/users/entities/User";
 import {AbstractUpdateProfile} from "src/domain/users/services/abstract-update-profile.service";
 import {UpdateProfileDto} from "../../dto/update-profile.dto";
-import {UsersRepository} from "../../repositories/users.repository";
+import {AbstractUsersRepository} from "src/domain/users/repositories/abstract-users.repository";
 
 @Injectable()
 export class UpdateProfileService implements AbstractUpdateProfile {
 
 	@Inject()
-	private usersRepository: UsersRepository
+	private usersRepository: AbstractUsersRepository
 
 	public async execute(updateProfileDto: UpdateProfileDto, id: string): Promise<User> {
 		const usersExists = await this.usersRepository.checkId(id)

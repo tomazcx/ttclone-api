@@ -1,7 +1,6 @@
 import {INestApplication, NotFoundException} from "@nestjs/common"
 import {JwtModule} from "@nestjs/jwt"
 import {Test, TestingModule} from "@nestjs/testing"
-import {DeleteUserService} from "src/application/users/services/DeleteUserService"
 import {NotFoundInterceptor} from "src/infra/common/errors/interceptors/not-found.interceptor"
 import {v4 as uuid} from 'uuid'
 import {DeleteUserController} from "."
@@ -11,11 +10,12 @@ import {JwtStrategy} from "src/infra/auth/strategies/jwt.strategy"
 import * as request from 'supertest'
 import {generateJwt} from "src/application/auth/utils/generate-jwt.util"
 import {NotFoundError} from "src/infra/common/errors/types/NotFoundError"
+import {AbstractDeleteUser} from "src/domain/users/services/abstract-delete-user.service"
 
 describe('DeleteUserController', () => {
 
 	let controller: DeleteUserController
-	let service: DeleteUserService
+	let service: AbstractDeleteUser
 	let app: INestApplication
 	let id: string
 	let token: string
@@ -35,7 +35,7 @@ describe('DeleteUserController', () => {
 			],
 			controllers: [DeleteUserController],
 			providers: [{
-				provide: DeleteUserService,
+				provide: AbstractDeleteUser,
 				useValue: {
 					execute: x => x
 				}
@@ -54,7 +54,7 @@ describe('DeleteUserController', () => {
 		token = generateJwt(id)
 
 		controller = module.get<DeleteUserController>(DeleteUserController)
-		service = module.get<DeleteUserService>(DeleteUserService)
+		service = module.get<AbstractDeleteUser>(AbstractDeleteUser)
 
 		app = module.createNestApplication()
 

@@ -1,19 +1,18 @@
 import {Inject, Injectable} from "@nestjs/common";
 import {NotFoundError} from 'src/infra/common/errors/types/NotFoundError'
 import {AbstractDeleteTweet} from "src/domain/tweets/services/abstract-delete-tweet.service";
-import {BadRequestError} from "src/infra/common/errors/types/BadRequestError";
-import {TweetsRepository} from "../../repositories/tweets.repository";
-import {UsersRepository} from "src/application/users/repositories/users.repository";
 import {ForbiddenError} from "src/infra/common/errors/types/ForbiddenError";
+import {AbstractTweetsRepository} from "src/domain/tweets/repositories/abstract-tweets.repository";
+import {AbstractUsersRepository} from "src/domain/users/repositories/abstract-users.repository";
 
 @Injectable()
 export class DeleteTweetService implements AbstractDeleteTweet {
 
 	@Inject()
-	private readonly tweetsRepository: TweetsRepository
+	private readonly tweetsRepository: AbstractTweetsRepository
 
 	@Inject()
-	private readonly usersRepository: UsersRepository
+	private readonly usersRepository: AbstractUsersRepository
 
 	public async execute(id: string, authorId: string): Promise<void> {
 		const tweetExists = await this.tweetsRepository.checkId(id)

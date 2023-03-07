@@ -1,10 +1,11 @@
+import {AbstractCreateTweet} from 'src/domain/tweets/services/abstract-create-tweet.service'
 import {NotFoundError} from 'src/infra/common/errors/types/NotFoundError'
 import {v4 as uuid} from 'uuid'
 import {CreateTweetService} from '.'
 
 describe("CreateTweetService", () => {
 
-	let service: CreateTweetService
+	let service: AbstractCreateTweet
 	let authorId: string
 	let id: string
 	let date: Date
@@ -36,9 +37,7 @@ describe("CreateTweetService", () => {
 			content: 'content-tweet'
 		}
 
-		//@ts-expect-error defined part of methods
 		service['tweetsRepository'] = mockTweetsRepository
-		//@ts-expect-error defined part of methods
 		service['usersRepository'] = mockUsersRepository
 
 		const result = await service.execute(createTweetDto, authorId)
@@ -57,7 +56,6 @@ describe("CreateTweetService", () => {
 			content: 'content-tweet'
 		}
 
-		//@ts-expect-error defined part of methods	
 		service['usersRepository'] = mockUsersRepository
 
 		await expect(service.execute(createTweetDto, authorId)).rejects.toBeInstanceOf(NotFoundError)

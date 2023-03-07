@@ -1,17 +1,17 @@
 import {Test, TestingModule} from "@nestjs/testing"
 import {User} from "src/domain/users/entities/User"
-import {ShowFollowingService} from "src/application/users/services/ShowFollowingService"
 import {ShowFollowingController} from "."
 import {v4 as uuid} from 'uuid'
 import * as request from 'supertest'
 import {INestApplication} from "@nestjs/common"
 import {NotFoundError} from "src/infra/common/errors/types/NotFoundError"
 import {NotFoundInterceptor} from "src/infra/common/errors/interceptors/not-found.interceptor"
+import {AbstractShowFollowing} from "src/domain/users/services/abstract-show-following.service"
 
 describe('ShowFollowingController', () => {
 
 	let showFollowingController: ShowFollowingController
-	let showFollowingService: ShowFollowingService
+	let showFollowingService: AbstractShowFollowing
 	let app: INestApplication
 	let id: string
 
@@ -19,7 +19,7 @@ describe('ShowFollowingController', () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
 				{
-					provide: ShowFollowingService,
+					provide: AbstractShowFollowing,
 					useValue: {
 						execute: (x => x)
 					}
@@ -33,7 +33,7 @@ describe('ShowFollowingController', () => {
 		app.useGlobalInterceptors(new NotFoundInterceptor)
 
 		showFollowingController = module.get<ShowFollowingController>(ShowFollowingController)
-		showFollowingService = module.get<ShowFollowingService>(ShowFollowingService)
+		showFollowingService = module.get<AbstractShowFollowing>(AbstractShowFollowing)
 
 		await app.init()
 

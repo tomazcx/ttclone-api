@@ -1,12 +1,12 @@
 import {Controller, HttpCode, HttpStatus, Param, Patch, UseGuards, Request} from "@nestjs/common";
 import {AuthGuard} from "@nestjs/passport";
-import {UnfollowService} from "src/application/users/services/UnfollowService";
+import {AbstractUnfollow} from "src/domain/users/services/abstract-unfollow.service";
 
 @Controller('users')
 export class UnfollowController {
 
 	constructor(
-		private readonly unfollowService: UnfollowService
+		private readonly unfollowService: AbstractUnfollow
 	) {}
 
 	@Patch('/unfollow/:id')

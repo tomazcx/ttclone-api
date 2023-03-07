@@ -1,10 +1,11 @@
+import {AbstractToggleLikeTweet} from 'src/domain/tweets/services/abstract-toggle-like-tweet.service'
 import {NotFoundError} from 'src/infra/common/errors/types/NotFoundError'
 import {v4 as uuid} from 'uuid'
 import {ToggleLikeTweetService} from '.'
 
 describe('ToggleLikeTweetService', () => {
 
-	let service: ToggleLikeTweetService
+	let service: AbstractToggleLikeTweet
 	let tweetId: string
 	let userWhoLikesId: string
 
@@ -26,9 +27,7 @@ describe('ToggleLikeTweetService', () => {
 			removeLikeTweet: jest.fn().mockReturnValue(Promise.resolve())
 		}
 
-		//@ts-expect-error defined part of methods
 		service['usersRepository'] = mockUsersRepository
-		//@ts-expect-error defined part of methods
 		service['tweetsRepository'] = mockTweetsRepository
 
 		await service.execute(tweetId, userWhoLikesId)
@@ -52,9 +51,7 @@ describe('ToggleLikeTweetService', () => {
 			likeTweet: jest.fn().mockReturnValue(Promise.resolve()),
 		}
 
-		//@ts-expect-error defined part of methods
 		service['usersRepository'] = mockUsersRepository
-		//@ts-expect-error defined part of methods
 		service['tweetsRepository'] = mockTweetsRepository
 
 		await service.execute(tweetId, userWhoLikesId)
@@ -72,7 +69,6 @@ describe('ToggleLikeTweetService', () => {
 			checkId: jest.fn().mockReturnValue(Promise.resolve(false))
 		}
 
-		//@ts-expect-error defined part of methods
 		service['usersRepository'] = mockUsersRepository
 
 		await expect(service.execute(tweetId, userWhoLikesId)).rejects.toBeInstanceOf(NotFoundError)
@@ -87,9 +83,7 @@ describe('ToggleLikeTweetService', () => {
 			checkId: jest.fn().mockReturnValue(Promise.resolve(false))
 		}
 
-		//@ts-expect-error defined part of methods
 		service['usersRepository'] = mockUsersRepository
-		//@ts-expect-error defined part of methods
 		service['tweetsRepository'] = mockTweetsRepository
 
 		await expect(service.execute(tweetId, userWhoLikesId)).rejects.toBeInstanceOf(NotFoundError)

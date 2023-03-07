@@ -2,10 +2,11 @@ import {NotFoundError} from 'src/infra/common/errors/types/NotFoundError'
 import {v4 as uuid} from 'uuid'
 import {UpdateImageService} from '.'
 import * as fs from 'fs'
+import {AbstractUpdateImage} from 'src/domain/users/services/abstract-update-image.service'
 
 describe('UpdateImageService', () => {
 
-	let service: UpdateImageService
+	let service: AbstractUpdateImage
 	let id: string
 
 	beforeEach(() => {
@@ -39,7 +40,6 @@ describe('UpdateImageService', () => {
 			updateImage: jest.fn().mockReturnValue(Promise.resolve(expectedOutput))
 		}
 
-		//@ts-expect-error defined part of methods
 		service['usersRepository'] = mockUsersRepository
 
 		const result = await service.execute('test.jpg', id)
@@ -56,7 +56,6 @@ describe('UpdateImageService', () => {
 			checkId: jest.fn().mockReturnValue(Promise.resolve(false)),
 		}
 
-		//@ts-expect-error defined part of methods
 		service['usersRepository'] = mockUsersRepository
 
 		await expect(service.execute('test.jpg', id)).rejects.toBeInstanceOf(NotFoundError)

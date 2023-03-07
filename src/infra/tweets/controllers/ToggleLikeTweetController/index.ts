@@ -1,12 +1,12 @@
 import {Controller, Request, HttpCode, HttpStatus, Param, UseGuards, Put} from "@nestjs/common";
 import {AuthGuard} from "@nestjs/passport";
-import {ToggleLikeTweetService} from "src/application/tweets/services/ToggleLikeTweetService";
+import {AbstractToggleLikeTweet} from "src/domain/tweets/services/abstract-toggle-like-tweet.service";
 
 @Controller('tweets')
 export class ToggleLikeTweetController {
 
 	constructor(
-		private readonly likeTweetService: ToggleLikeTweetService
+		private readonly likeTweetService: AbstractToggleLikeTweet
 	) {}
 
 	@Put('/like/:id')

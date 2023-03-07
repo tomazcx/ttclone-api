@@ -1,13 +1,13 @@
 import {NotFoundError} from 'src/infra/common/errors/types/NotFoundError'
-import {User} from 'src/domain/users/entities/User'
 import {v4 as uuid} from 'uuid'
 import {UnfollowService} from '.'
 import {UnprocessableEntityError} from 'src/infra/common/errors/types/UnprocessableEntityError'
 import {BadRequestError} from 'src/infra/common/errors/types/BadRequestError'
+import {AbstractUnfollow} from 'src/domain/users/services/abstract-unfollow.service'
 
 describe('UnfollowService', () => {
 
-	let service: UnfollowService
+	let service: AbstractUnfollow
 	let userToUnfollowId: string
 	let unfollowerId: string
 
@@ -24,7 +24,6 @@ describe('UnfollowService', () => {
 			verifyUserFollowing: jest.fn().mockReturnValue(Promise.resolve(true))
 		}
 
-		//@ts-expect-error defined part of methods
 		service['usersRepository'] = mockUsersRepository
 
 		await service.execute(userToUnfollowId, unfollowerId)
@@ -38,7 +37,6 @@ describe('UnfollowService', () => {
 			checkId: jest.fn().mockReturnValue(Promise.resolve(false))
 		}
 
-		//@ts-expect-error defined part of methods
 		service['usersRepository'] = mockUsersRepository
 
 		await expect(service.execute(userToUnfollowId, unfollowerId)).rejects.toBeInstanceOf(NotFoundError)
@@ -54,7 +52,6 @@ describe('UnfollowService', () => {
 			unfollow: jest.fn().mockReturnValue(Promise.resolve())
 		}
 
-		//@ts-expect-error defined part of methods
 		service['usersRepository'] = mockUsersRepository
 
 		await expect(service.execute(userToUnfollowId, unfollowerId)).rejects.toBeInstanceOf(UnprocessableEntityError)
@@ -67,7 +64,6 @@ describe('UnfollowService', () => {
 			verifyUserFollowing: jest.fn().mockReturnValue(Promise.resolve(false))
 		}
 
-		//@ts-expect-error defined part of methods
 		service['usersRepository'] = mockUsersRepository
 
 		await expect(service.execute(userToUnfollowId, unfollowerId)).rejects.toBeInstanceOf(BadRequestError)

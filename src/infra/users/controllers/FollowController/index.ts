@@ -1,12 +1,12 @@
 import {Controller, Request, HttpCode, HttpStatus, Param, Patch, UseGuards} from "@nestjs/common";
 import {AuthGuard} from "@nestjs/passport";
-import {FollowService} from "src/application/users/services/FollowService";
+import {AbstractFollow} from "src/domain/users/services/abstract-follow.service";
 
 @Controller('users')
 export class FollowController {
 
 	constructor(
-		private readonly followService: FollowService
+		private readonly followService: AbstractFollow
 	) {}
 
 	@Patch('/follow/:id')

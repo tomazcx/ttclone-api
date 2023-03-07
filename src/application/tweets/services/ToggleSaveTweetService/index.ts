@@ -1,18 +1,18 @@
 import {Inject, Injectable} from "@nestjs/common";
-import {UsersRepository} from "src/application/users/repositories/users.repository";
 import {AbstractToggleSaveTweet} from "src/domain/tweets/services/abstract-toggle-save-tweet.service";
-import {TweetsRepository} from "../../repositories/tweets.repository";
 import {NotFoundError} from 'src/infra/common/errors/types/NotFoundError'
+import {AbstractUsersRepository} from "src/domain/users/repositories/abstract-users.repository";
+import {AbstractTweetsRepository} from "src/domain/tweets/repositories/abstract-tweets.repository";
 
 
 @Injectable()
 export class ToggleSaveTweetService implements AbstractToggleSaveTweet {
 
 	@Inject()
-	private usersRepository: UsersRepository
+	private usersRepository: AbstractUsersRepository
 
 	@Inject()
-	private tweetsRepository: TweetsRepository
+	private tweetsRepository: AbstractTweetsRepository
 
 	public async execute(tweetId: string, userWhoSaveId: string): Promise<void> {
 		const userExists = await this.usersRepository.checkId(userWhoSaveId)

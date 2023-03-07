@@ -2,14 +2,14 @@ import {Controller, Request, HttpCode, HttpStatus, Patch, UploadedFile, UseGuard
 import {AuthGuard} from "@nestjs/passport";
 import {FileInterceptor} from "@nestjs/platform-express";
 import {diskStorage} from "multer";
-import {UpdateBannerService} from "src/application/users/services/UpdateBannerService";
 import * as path from 'path'
+import {AbstractUpdateBanner} from "src/domain/users/services/abstract-update-banner.service";
 
 @Controller('users')
 export class UpdateBannerController {
 
 	constructor(
-		private readonly updateBannerService: UpdateBannerService
+		private readonly updateBannerService: AbstractUpdateBanner
 	) {}
 
 	@Patch('/banner')

@@ -2,14 +2,14 @@ import {Inject, Injectable} from "@nestjs/common";
 import {NotFoundError} from "src/infra/common/errors/types/NotFoundError";
 import {AbstractUnfollow} from "src/domain/users/services/abstract-unfollow.service";
 import {UnprocessableEntityError} from "src/infra/common/errors/types/UnprocessableEntityError";
-import {UsersRepository} from "../../repositories/users.repository";
 import {BadRequestError} from "src/infra/common/errors/types/BadRequestError";
+import {AbstractUsersRepository} from "src/domain/users/repositories/abstract-users.repository";
 
 @Injectable()
 export class UnfollowService implements AbstractUnfollow {
 
 	@Inject()
-	private usersRepository: UsersRepository
+	private usersRepository: AbstractUsersRepository
 
 	public async execute(userToUnfollowId: string, unfollowerId: string): Promise<void> {
 		if (userToUnfollowId === unfollowerId) {

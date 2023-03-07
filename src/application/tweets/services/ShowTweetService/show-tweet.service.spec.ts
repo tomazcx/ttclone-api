@@ -1,10 +1,11 @@
+import {AbstractShowTweet} from 'src/domain/tweets/services/abstract-show-tweet.service'
 import {NotFoundError} from 'src/infra/common/errors/types/NotFoundError'
 import {v4 as uuid} from 'uuid'
 import {ShowTweetService} from '.'
 
 describe('ShowTweetService', () => {
 
-	let service: ShowTweetService
+	let service: AbstractShowTweet
 	let id: string
 
 	beforeEach(() => {
@@ -25,7 +26,6 @@ describe('ShowTweetService', () => {
 			showTweet: jest.fn().mockReturnValue(Promise.resolve(expectedOutput))
 		}
 
-		//@ts-expect-error defined part of methods
 		service['tweetsRepository'] = mockTweetsRepository
 
 		const result = await service.execute(id)
@@ -39,7 +39,6 @@ describe('ShowTweetService', () => {
 			checkId: jest.fn().mockReturnValue(Promise.resolve(false)),
 		}
 
-		//@ts-expect-error defined part of methods
 		service['tweetsRepository'] = mockTweetsRepository
 
 		await expect(service.execute(id)).rejects.toBeInstanceOf(NotFoundError)

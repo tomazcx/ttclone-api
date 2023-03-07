@@ -1,15 +1,15 @@
 import {Inject, Injectable} from "@nestjs/common";
 import {NotFoundError} from "src/infra/common/errors/types/NotFoundError";
 import {AbstractFollow} from "src/domain/users/services/abstract-follow.service";
-import {UsersRepository} from "../../repositories/users.repository";
 import {UnprocessableEntityError} from "src/infra/common/errors/types/UnprocessableEntityError";
 import {BadRequestError} from "src/infra/common/errors/types/BadRequestError";
+import {AbstractUsersRepository} from "src/domain/users/repositories/abstract-users.repository";
 
 @Injectable()
 export class FollowService implements AbstractFollow {
 
 	@Inject()
-	private usersRepository: UsersRepository
+	private usersRepository: AbstractUsersRepository
 
 	public async execute(userToFollowId: string, followerId: string): Promise<void> {
 

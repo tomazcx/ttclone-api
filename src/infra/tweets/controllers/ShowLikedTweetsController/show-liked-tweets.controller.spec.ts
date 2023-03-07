@@ -1,16 +1,16 @@
 import {INestApplication} from "@nestjs/common"
 import {Test, TestingModule} from "@nestjs/testing"
 import {Tweet} from "src/domain/tweets/entities/Tweet"
-import {ShowLikedTweetsService} from "src/application/tweets/services/ShowLikedTweetsService"
 import {NotFoundInterceptor} from "src/infra/common/errors/interceptors/not-found.interceptor"
 import * as request from 'supertest'
 import {v4 as uuid} from 'uuid'
 import {NotFoundError} from 'src/infra/common/errors/types/NotFoundError'
 import {ShowLikedTweetsController} from "."
+import {AbstractShowLikedTweets} from "src/domain/tweets/services/abstract-show-liked-tweets.service"
 
 describe('ShowLikedTweetsController', () => {
 
-	let service: ShowLikedTweetsService
+	let service: AbstractShowLikedTweets
 	let controller: ShowLikedTweetsController
 	let app: INestApplication
 
@@ -19,7 +19,7 @@ describe('ShowLikedTweetsController', () => {
 			controllers: [ShowLikedTweetsController],
 			providers: [
 				{
-					provide: ShowLikedTweetsService,
+					provide: AbstractShowLikedTweets,
 					useValue: {
 						execute: x => x
 					}
@@ -31,7 +31,7 @@ describe('ShowLikedTweetsController', () => {
 		app.useGlobalInterceptors(new NotFoundInterceptor)
 
 		controller = module.get<ShowLikedTweetsController>(ShowLikedTweetsController)
-		service = module.get<ShowLikedTweetsService>(ShowLikedTweetsService)
+		service = module.get<AbstractShowLikedTweets>(AbstractShowLikedTweets)
 
 		await app.init()
 	})

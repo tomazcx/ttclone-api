@@ -1,5 +1,4 @@
 import {Test, TestingModule} from "@nestjs/testing"
-import {ToggleRetweetService} from "src/application/tweets/services/ToggleRetweetService"
 import {v4 as uuid} from 'uuid'
 import * as request from 'supertest'
 import {INestApplication} from "@nestjs/common"
@@ -11,11 +10,12 @@ import {JwtModule} from "@nestjs/jwt"
 import 'dotenv/config'
 import {NotFoundError} from "src/infra/common/errors/types/NotFoundError"
 import {NotFoundInterceptor} from "src/infra/common/errors/interceptors/not-found.interceptor"
+import {AbstractToggleRetweet} from "src/domain/tweets/services/abstract-toggle-retweet.service"
 
 describe('ToggleRetweetController', () => {
 
 	let controller: ToggleRetweetController
-	let service: ToggleRetweetService
+	let service: AbstractToggleRetweet
 	let app: INestApplication
 	let userWhoLikesId: string
 	let tweetId: string
@@ -36,7 +36,7 @@ describe('ToggleRetweetController', () => {
 			controllers: [ToggleRetweetController],
 			providers: [
 				{
-					provide: ToggleRetweetService,
+					provide: AbstractToggleRetweet,
 					useValue: {
 						execute: x => x
 					},
@@ -52,7 +52,7 @@ describe('ToggleRetweetController', () => {
 		}).compile()
 
 		controller = module.get<ToggleRetweetController>(ToggleRetweetController)
-		service = module.get<ToggleRetweetService>(ToggleRetweetService)
+		service = module.get<AbstractToggleRetweet>(AbstractToggleRetweet)
 
 		jwt = generateJwt(userWhoLikesId)
 

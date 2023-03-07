@@ -1,12 +1,12 @@
 import {Request, Controller, HttpCode, HttpStatus, Put, UseGuards, Param} from "@nestjs/common";
 import {AuthGuard} from "@nestjs/passport";
-import {ToggleSaveTweetService} from "src/application/tweets/services/ToggleSaveTweetService";
+import {AbstractToggleSaveTweet} from "src/domain/tweets/services/abstract-toggle-save-tweet.service";
 
 @Controller('tweets')
 export class ToggleSaveTweetController {
 
 	constructor(
-		private readonly toggleSaveTweetService: ToggleSaveTweetService
+		private readonly toggleSaveTweetService: AbstractToggleSaveTweet
 	) {}
 
 	@Put('/save/:id')

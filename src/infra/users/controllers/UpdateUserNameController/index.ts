@@ -1,13 +1,13 @@
 import {Body, Request, Controller, HttpCode, HttpStatus, Param, Patch, UseGuards} from "@nestjs/common";
 import {AuthGuard} from "@nestjs/passport";
 import {UpdateUserNameDto} from "src/application/users/dto/update-user-name.dto";
-import {UpdateUserNameService} from "src/application/users/services/UpdateUserNameService";
+import {AbstractUpdateUserName} from "src/domain/users/services/abstract-update-user-name.service";
 
 @Controller('users')
 export class UpdateUserNameController {
 
 	constructor(
-		private readonly updateUserNameService: UpdateUserNameService
+		private readonly updateUserNameService: AbstractUpdateUserName
 	) {}
 
 	@Patch('user')

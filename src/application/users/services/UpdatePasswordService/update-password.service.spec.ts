@@ -4,10 +4,11 @@ import {UpdatePasswordService} from '.'
 import * as bcrypt from 'bcrypt'
 import {UnprocessableEntityError} from 'src/infra/common/errors/types/UnprocessableEntityError'
 import {BadRequestError} from 'src/infra/common/errors/types/BadRequestError'
+import {AbstractUpdatePassword} from 'src/domain/users/services/abstract-update-password.service'
 
 describe('UpdatePasswordService', () => {
 
-	let service: UpdatePasswordService
+	let service: AbstractUpdatePassword
 	let id: string
 	let hashedPassword: string
 
@@ -31,7 +32,6 @@ describe('UpdatePasswordService', () => {
 			updatePassword: jest.fn().mockReturnValue(Promise.resolve(expectedOutput))
 		}
 
-		//@ts-expect-error defined part of methods
 		service['usersRepository'] = mockUsersRepository
 
 		const updatePasswordDto = {
@@ -54,7 +54,6 @@ describe('UpdatePasswordService', () => {
 			checkId: jest.fn().mockReturnValue(Promise.resolve(false)),
 		}
 
-		//@ts-expect-error defined part of methods
 		service['usersRepository'] = mockUsersRepository
 
 		const updatePasswordDto = {
@@ -85,7 +84,6 @@ describe('UpdatePasswordService', () => {
 			getPassword: jest.fn().mockReturnValue(Promise.resolve(hashedPassword)),
 		}
 
-		//@ts-expect-error defined part of methods
 		service['usersRepository'] = mockUsersRepository
 
 		const updatePasswordDto = {
@@ -104,7 +102,6 @@ describe('UpdatePasswordService', () => {
 			getPassword: jest.fn().mockReturnValue(Promise.resolve(hashedPassword)),
 		}
 
-		//@ts-expect-error defined part of methods
 		service['usersRepository'] = mockUsersRepository
 
 		const updatePasswordDto = {

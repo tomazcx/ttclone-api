@@ -1,8 +1,7 @@
 import {Test, TestingModule} from "@nestjs/testing"
 import {User} from "src/domain/users/entities/User"
-import {UpdateUserNameService} from "src/application/users/services/UpdateUserNameService"
 import {v4 as uuid} from 'uuid'
-import {BadRequestException, INestApplication, NotFoundException} from "@nestjs/common"
+import {INestApplication} from "@nestjs/common"
 import {UpdateUserNameController} from "."
 import 'dotenv/config'
 import {JwtModule} from "@nestjs/jwt"
@@ -14,12 +13,13 @@ import {JwtStrategy} from "src/infra/auth/strategies/jwt.strategy"
 import {NotFoundInterceptor} from "src/infra/common/errors/interceptors/not-found.interceptor"
 import {BadRequestInterceptor} from "src/infra/common/errors/interceptors/bad-request.interceptor"
 import {BadRequestError} from "src/infra/common/errors/types/BadRequestError"
+import {AbstractUpdateUserName} from "src/domain/users/services/abstract-update-user-name.service"
 
 
 describe('UpdateUserNameController', () => {
 
 	let controller: UpdateUserNameController
-	let service: UpdateUserNameService
+	let service: AbstractUpdateUserName
 	let app: INestApplication
 	let id: string
 	let token: string
@@ -41,7 +41,7 @@ describe('UpdateUserNameController', () => {
 			controllers: [UpdateUserNameController],
 			providers: [
 				{
-					provide: UpdateUserNameService,
+					provide: AbstractUpdateUserName,
 					useValue: {
 						execute: x => x
 					}
@@ -61,7 +61,7 @@ describe('UpdateUserNameController', () => {
 		app.useGlobalInterceptors(new BadRequestInterceptor)
 
 		controller = module.get<UpdateUserNameController>(UpdateUserNameController)
-		service = module.get<UpdateUserNameService>(UpdateUserNameService)
+		service = module.get<AbstractUpdateUserName>(AbstractUpdateUserName)
 
 		await app.init()
 

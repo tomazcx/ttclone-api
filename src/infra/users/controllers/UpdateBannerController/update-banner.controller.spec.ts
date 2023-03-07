@@ -1,6 +1,5 @@
-import {INestApplication, NotFoundException} from "@nestjs/common"
+import {INestApplication} from "@nestjs/common"
 import {Test, TestingModule} from "@nestjs/testing"
-import {UpdateBannerService} from "src/application/users/services/UpdateBannerService"
 import {User} from "src/domain/users/entities/User"
 import {UpdateBannerController} from "."
 import {v4 as uuid} from 'uuid'
@@ -13,11 +12,12 @@ import {JwtModule} from "@nestjs/jwt"
 import {NotFoundInterceptor} from "src/infra/common/errors/interceptors/not-found.interceptor"
 import * as fs from 'fs'
 import {NotFoundError} from "src/infra/common/errors/types/NotFoundError"
+import {AbstractUpdateBanner} from "src/domain/users/services/abstract-update-banner.service"
 
 describe('UpdateBannerController', () => {
 
 	let controller: UpdateBannerController
-	let service: UpdateBannerService
+	let service: AbstractUpdateBanner
 	let app: INestApplication
 	let id: string
 	let token: string
@@ -38,7 +38,7 @@ describe('UpdateBannerController', () => {
 			],
 			controllers: [UpdateBannerController],
 			providers: [{
-				provide: UpdateBannerService,
+				provide: AbstractUpdateBanner,
 				useValue: {
 					execute: (x => x)
 				}
@@ -57,7 +57,7 @@ describe('UpdateBannerController', () => {
 		app.useGlobalInterceptors(new NotFoundInterceptor)
 
 		controller = module.get<UpdateBannerController>(UpdateBannerController)
-		service = module.get<UpdateBannerService>(UpdateBannerService)
+		service = module.get<AbstractUpdateBanner>(AbstractUpdateBanner)
 
 		await app.init()
 	})

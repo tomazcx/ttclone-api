@@ -1,11 +1,11 @@
 import {Controller, Get, HttpCode, HttpStatus, Param} from "@nestjs/common";
-import {ShowFollowingService} from "src/application/users/services/ShowFollowingService";
+import {AbstractShowFollowing} from "src/domain/users/services/abstract-show-following.service";
 
 @Controller('users')
 export class ShowFollowingController {
 
 	constructor(
-		private readonly showFollowingService: ShowFollowingService
+		private readonly showFollowingService: AbstractShowFollowing
 	) {}
 
 	@Get('/following/:id')

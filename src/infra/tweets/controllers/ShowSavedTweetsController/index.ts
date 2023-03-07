@@ -1,12 +1,12 @@
 import {Controller, Get, HttpCode, HttpStatus, Request, UseGuards} from "@nestjs/common";
 import {AuthGuard} from "@nestjs/passport";
-import {ShowSavedTweetsService} from "src/application/tweets/services/ShowSavedTweetsService";
+import {AbstractShowSavedTweets} from "src/domain/tweets/services/abstract-show-saved-tweets.service";
 
 @Controller('tweets')
 export class ShowSavedTweetsController {
 
 	constructor(
-		private readonly showSavedTweetsService: ShowSavedTweetsService
+		private readonly showSavedTweetsService: AbstractShowSavedTweets
 	) {}
 
 	@Get('/save/all')

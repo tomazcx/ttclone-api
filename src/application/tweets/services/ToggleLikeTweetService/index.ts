@@ -1,17 +1,17 @@
 import {Inject, Injectable} from "@nestjs/common";
-import {UsersRepository} from "src/application/users/repositories/users.repository";
+import {AbstractTweetsRepository} from "src/domain/tweets/repositories/abstract-tweets.repository";
 import {AbstractToggleLikeTweet} from "src/domain/tweets/services/abstract-toggle-like-tweet.service";
+import {AbstractUsersRepository} from "src/domain/users/repositories/abstract-users.repository";
 import {NotFoundError} from 'src/infra/common/errors/types/NotFoundError'
-import {TweetsRepository} from "../../repositories/tweets.repository";
 
 @Injectable()
 export class ToggleLikeTweetService implements AbstractToggleLikeTweet {
 
 	@Inject()
-	private usersRepository: UsersRepository
+	private usersRepository: AbstractUsersRepository
 
 	@Inject()
-	private tweetsRepository: TweetsRepository
+	private tweetsRepository: AbstractTweetsRepository
 
 	public async execute(tweetId: string, userWhoLikesId: string): Promise<void> {
 		const userExists = await this.usersRepository.checkId(userWhoLikesId)

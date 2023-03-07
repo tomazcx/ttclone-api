@@ -1,3 +1,4 @@
+import {AbstractUpdateUserName} from 'src/domain/users/services/abstract-update-user-name.service'
 import {NotFoundError} from 'src/infra/common/errors/types/NotFoundError'
 import {UnprocessableEntityError} from 'src/infra/common/errors/types/UnprocessableEntityError'
 import {v4 as uuid} from 'uuid'
@@ -5,7 +6,7 @@ import {UpdateUserNameService} from '.'
 
 describe('UpdateUserNameService', () => {
 
-	let service: UpdateUserNameService
+	let service: AbstractUpdateUserName
 	let id: string
 	let date: Date
 
@@ -32,7 +33,6 @@ describe('UpdateUserNameService', () => {
 			checkUserName: jest.fn().mockReturnValue(Promise.resolve(false))
 		}
 
-		//@ts-expect-error defined part of methods
 		service['usersRepository'] = mockUsersRepository
 
 		const updateUserNameDto = {
@@ -53,7 +53,6 @@ describe('UpdateUserNameService', () => {
 			checkId: jest.fn().mockReturnValue(Promise.resolve(false))
 		}
 
-		//@ts-expect-error defined part of methods
 		service['usersRepository'] = mockUsersRepository
 
 		const updateUserNameDto = {
@@ -69,7 +68,6 @@ describe('UpdateUserNameService', () => {
 			checkUserName: jest.fn().mockReturnValue(Promise.resolve(true))
 		}
 
-		//@ts-expect-error defined part of methods
 		service['usersRepository'] = mockUsersRepository
 
 

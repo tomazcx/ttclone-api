@@ -1,10 +1,11 @@
+import {AbstractToggleSaveTweet} from 'src/domain/tweets/services/abstract-toggle-save-tweet.service'
 import {NotFoundError} from 'src/infra/common/errors/types/NotFoundError'
 import {v4 as uuid} from 'uuid'
 import {ToggleSaveTweetService} from '.'
 
 describe('ToggleSaveTweetService', () => {
 
-	let service: ToggleSaveTweetService
+	let service: AbstractToggleSaveTweet
 	let tweetId: string
 	let userWhoSavesId: string
 
@@ -26,9 +27,7 @@ describe('ToggleSaveTweetService', () => {
 			removeSavedTweet: jest.fn().mockReturnValue(Promise.resolve())
 		}
 
-		//@ts-expect-error defined part of methods
 		service['usersRepository'] = mockUsersRepository
-		//@ts-expect-error defined part of methods
 		service['tweetsRepository'] = mockTweetsRepository
 
 		await service.execute(tweetId, userWhoSavesId)
@@ -52,9 +51,7 @@ describe('ToggleSaveTweetService', () => {
 			removeSavedTweet: jest.fn().mockReturnValue(Promise.resolve())
 		}
 
-		//@ts-expect-error defined part of methods
 		service['usersRepository'] = mockUsersRepository
-		//@ts-expect-error defined part of methods
 		service['tweetsRepository'] = mockTweetsRepository
 
 		await service.execute(tweetId, userWhoSavesId)
@@ -72,7 +69,6 @@ describe('ToggleSaveTweetService', () => {
 			checkId: jest.fn().mockReturnValue(Promise.resolve(false))
 		}
 
-		//@ts-expect-error defined part of methods
 		service['usersRepository'] = mockUsersRepository
 
 		await expect(service.execute(tweetId, userWhoSavesId)).rejects.toBeInstanceOf(NotFoundError)
@@ -87,9 +83,7 @@ describe('ToggleSaveTweetService', () => {
 			checkId: jest.fn().mockReturnValue(Promise.resolve(false))
 		}
 
-		//@ts-expect-error defined part of methods
 		service['usersRepository'] = mockUsersRepository
-		//@ts-expect-error defined part of methods
 		service['tweetsRepository'] = mockTweetsRepository
 
 		await expect(service.execute(tweetId, userWhoSavesId)).rejects.toBeInstanceOf(NotFoundError)

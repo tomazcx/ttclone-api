@@ -14,10 +14,147 @@ import {UpdateImageService} from "src/application/users/services/UpdateImageServ
 import {UpdatePasswordService} from "src/application/users/services/UpdatePasswordService";
 import {UpdateProfileService} from "src/application/users/services/UpdateProfileService";
 import {UpdateUserNameService} from "src/application/users/services/UpdateUserNameService";
+import {AbstractUsersRepository} from "src/domain/users/repositories/abstract-users.repository";
+import {AbstractCheckUserName} from "src/domain/users/services/abstract-check-user-name.service";
+import {AbstractCreateUser} from "src/domain/users/services/abstract-create-user.service";
+import {AbstractDeleteUser} from "src/domain/users/services/abstract-delete-user.service";
+import {AbstractFollow} from "src/domain/users/services/abstract-follow.service";
+import {AbstractShowFollowers} from "src/domain/users/services/abstract-show-followers.service";
+import {AbstractShowFollowing} from "src/domain/users/services/abstract-show-following.service";
+import {AbstractShowUser} from "src/domain/users/services/abstract-show-user.service";
+import {AbstractShowUsersByUserName} from "src/domain/users/services/abstract-show-users-by-user-name.service";
+import {AbstractUnfollow} from "src/domain/users/services/abstract-unfollow.service";
+import {AbstractUpdateBanner} from "src/domain/users/services/abstract-update-banner.service";
+import {AbstractUpdateImage} from "src/domain/users/services/abstract-update-image.service";
+import {AbstractUpdatePassword} from "src/domain/users/services/abstract-update-password.service";
+import {AbstractUpdateProfile} from "src/domain/users/services/abstract-update-profile.service";
+import {AbstractUpdateUserName} from "src/domain/users/services/abstract-update-user-name.service";
 import {PrismaService} from "src/external/services/prisma.service";
 
 @Module({
-	providers: [ShowUserService, CreateUserService, ShowFollowersService, ShowFollowingService, FollowService, UnfollowService, ShowUsersByUserNameService, UpdateUserNameService, CheckUserNameService, DeleteUserService, UpdateProfileService, UpdatePasswordService, UpdateImageService, UpdateBannerService, UsersRepository, PrismaService],
-	exports: [ShowUserService, CreateUserService, ShowFollowersService, ShowFollowingService, FollowService, UnfollowService, ShowUsersByUserNameService, UpdateUserNameService, CheckUserNameService, DeleteUserService, UpdateProfileService, UpdatePasswordService, UpdateImageService, UpdateBannerService, UsersRepository, PrismaService]
+	providers: [
+		{
+			provide: AbstractShowUser,
+			useClass: ShowUserService
+		},
+		{
+			provide: AbstractCreateUser,
+			useClass: CreateUserService
+		},
+		{
+			provide: AbstractShowFollowers,
+			useClass: ShowFollowersService
+		},
+		{
+			provide: AbstractShowFollowing,
+			useClass: ShowFollowingService
+		},
+		{
+			provide: AbstractFollow,
+			useClass: FollowService
+		},
+		{
+			provide: AbstractUnfollow,
+			useClass: UnfollowService
+		},
+		{
+			provide: AbstractShowUsersByUserName,
+			useClass: ShowUsersByUserNameService
+		}
+		,
+		{
+			provide: AbstractUpdateUserName,
+			useClass: UpdateUserNameService
+		},
+		{
+			provide: AbstractCheckUserName,
+			useClass: CheckUserNameService
+		},
+		{
+			provide: AbstractDeleteUser,
+			useClass: DeleteUserService
+		},
+		{
+			provide: AbstractUpdateProfile,
+			useClass: UpdateProfileService
+		},
+		{
+			provide: AbstractUpdatePassword,
+			useClass: UpdatePasswordService
+		},
+		{
+			provide: AbstractUpdateImage,
+			useClass: UpdateImageService
+		},
+		{
+			provide: AbstractUpdateBanner,
+			useClass: UpdateBannerService
+		},
+		{
+			provide: AbstractUsersRepository,
+			useClass: UsersRepository
+		}, PrismaService],
+	exports: [
+		{
+			provide: AbstractShowUser,
+			useClass: ShowUserService
+		},
+		{
+			provide: AbstractCreateUser,
+			useClass: CreateUserService
+		},
+		{
+			provide: AbstractShowFollowers,
+			useClass: ShowFollowersService
+		},
+		{
+			provide: AbstractShowFollowing,
+			useClass: ShowFollowingService
+		},
+		{
+			provide: AbstractFollow,
+			useClass: FollowService
+		},
+		{
+			provide: AbstractUnfollow,
+			useClass: UnfollowService
+		},
+		{
+			provide: AbstractShowUsersByUserName,
+			useClass: ShowUsersByUserNameService
+		}
+		,
+		{
+			provide: AbstractUpdateUserName,
+			useClass: UpdateUserNameService
+		},
+		{
+			provide: AbstractCheckUserName,
+			useClass: CheckUserNameService
+		},
+		{
+			provide: AbstractDeleteUser,
+			useClass: DeleteUserService
+		},
+		{
+			provide: AbstractUpdateProfile,
+			useClass: UpdateProfileService
+		},
+		{
+			provide: AbstractUpdatePassword,
+			useClass: UpdatePasswordService
+		},
+		{
+			provide: AbstractUpdateImage,
+			useClass: UpdateImageService
+		},
+		{
+			provide: AbstractUpdateBanner,
+			useClass: UpdateBannerService
+		},
+		{
+			provide: AbstractUsersRepository,
+			useClass: UsersRepository
+		}, PrismaService],
 })
 export class UserServicesModule {}

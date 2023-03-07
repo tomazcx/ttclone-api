@@ -1,6 +1,5 @@
 import {INestApplication, NotFoundException} from "@nestjs/common"
 import {Test, TestingModule} from "@nestjs/testing"
-import {UpdateProfileService} from "src/application/users/services/UpdateProfileService"
 import {User} from "src/domain/users/entities/User"
 import {UpdateProfileController} from "."
 import {v4 as uuid} from 'uuid'
@@ -12,12 +11,13 @@ import {generateJwt} from "src/application/auth/utils/generate-jwt.util"
 import {ValidateUserService} from "src/application/auth/services/ValidateUserService"
 import {JwtStrategy} from "src/infra/auth/strategies/jwt.strategy"
 import {NotFoundInterceptor} from "src/infra/common/errors/interceptors/not-found.interceptor"
+import {AbstractUpdateProfile} from "src/domain/users/services/abstract-update-profile.service"
 
 
 describe('UpdateProfileController', () => {
 
 	let controller: UpdateProfileController
-	let service: UpdateProfileService
+	let service: AbstractUpdateProfile
 	let app: INestApplication
 	let id: string
 	let token: string
@@ -39,7 +39,7 @@ describe('UpdateProfileController', () => {
 			controllers: [UpdateProfileController],
 			providers: [
 				{
-					provide: UpdateProfileService,
+					provide: AbstractUpdateProfile,
 					useValue: {
 						execute: (x => x)
 					}
@@ -58,7 +58,7 @@ describe('UpdateProfileController', () => {
 		app.useGlobalInterceptors(new NotFoundInterceptor)
 
 		controller = module.get<UpdateProfileController>(UpdateProfileController)
-		service = module.get<UpdateProfileService>(UpdateProfileService)
+		service = module.get<AbstractUpdateProfile>(AbstractUpdateProfile)
 
 		await app.init()
 

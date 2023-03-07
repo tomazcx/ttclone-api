@@ -4,15 +4,15 @@ import {User} from "src/domain/users/entities/User";
 import {AbstractUpdatePassword} from "src/domain/users/services/abstract-update-password.service";
 import {UnprocessableEntityError} from "src/infra/common/errors/types/UnprocessableEntityError";
 import {UpdatePasswordDto} from "../../dto/update-password.dto";
-import {UsersRepository} from "../../repositories/users.repository";
 import * as bcrypt from 'bcrypt'
 import {BadRequestError} from "src/infra/common/errors/types/BadRequestError";
+import {AbstractUsersRepository} from "src/domain/users/repositories/abstract-users.repository";
 
 @Injectable()
 export class UpdatePasswordService implements AbstractUpdatePassword {
 
 	@Inject()
-	private usersRepository: UsersRepository
+	private usersRepository: AbstractUsersRepository
 
 	public async execute({oldPassword, password, confirmPassword}: UpdatePasswordDto, id: string): Promise<User> {
 

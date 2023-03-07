@@ -1,3 +1,4 @@
+import {AbstractDeleteTweet} from 'src/domain/tweets/services/abstract-delete-tweet.service'
 import {ForbiddenError} from 'src/infra/common/errors/types/ForbiddenError'
 import {NotFoundError} from 'src/infra/common/errors/types/NotFoundError'
 import {v4 as uuid} from 'uuid'
@@ -5,7 +6,7 @@ import {DeleteTweetService} from '.'
 
 describe('DeleteTweetService', () => {
 
-	let service: DeleteTweetService
+	let service: AbstractDeleteTweet
 	let authorId: string
 	let id: string
 
@@ -27,9 +28,7 @@ describe('DeleteTweetService', () => {
 			delete: jest.fn().mockReturnValue(Promise.resolve())
 		}
 
-		//@ts-expect-error defined part of methods
 		service['tweetsRepository'] = mockTweetsRepository
-		//@ts-expect-error defined parth of methods
 		service['usersRepository'] = mockUsersRepository
 
 		await service.execute(id, authorId)
@@ -48,9 +47,7 @@ describe('DeleteTweetService', () => {
 			checkId: jest.fn().mockReturnValue(Promise.resolve(false))
 		}
 
-		//@ts-expect-error defined parth of methods
 		service['usersRepository'] = mockUsersRepository
-		//@ts-expect-error defined part of methods
 		service['tweetsRepository'] = mockTweetsRepository
 
 		await expect(service.execute(id, authorId)).rejects.toBeInstanceOf(NotFoundError)
@@ -67,9 +64,7 @@ describe('DeleteTweetService', () => {
 			checkId: jest.fn().mockReturnValue(Promise.resolve(true))
 		}
 
-		//@ts-expect-error defined parth of methods
 		service['usersRepository'] = mockUsersRepository
-		//@ts-expect-error defined part of methods
 		service['tweetsRepository'] = mockTweetsRepository
 
 		await expect(service.execute(id, authorId)).rejects.toBeInstanceOf(ForbiddenError)
@@ -81,7 +76,6 @@ describe('DeleteTweetService', () => {
 			checkId: jest.fn().mockReturnValue(Promise.resolve(false)),
 		}
 
-		//@ts-expect-error defined part of methods
 		service['tweetsRepository'] = mockTweetsRepository
 
 		await expect(service.execute(id, authorId)).rejects.toBeInstanceOf(NotFoundError)

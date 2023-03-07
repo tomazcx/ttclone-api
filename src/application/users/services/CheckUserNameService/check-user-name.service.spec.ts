@@ -1,8 +1,9 @@
+import {AbstractCheckUserName} from "src/domain/users/services/abstract-check-user-name.service"
 import {CheckUserNameService} from "."
 
 describe('CheckUserNameService', () => {
 
-	let service: CheckUserNameService
+	let service: AbstractCheckUserName
 
 	beforeEach(() => {
 		service = new CheckUserNameService()
@@ -19,7 +20,6 @@ describe('CheckUserNameService', () => {
 			checkUserName: jest.fn().mockReturnValue(Promise.resolve(expectedOutput))
 		}
 
-		//@ts-expect-error defined part of methods
 		service['usersRepository'] = mockUsersRepository
 
 		const result = await service.execute('@test-user')

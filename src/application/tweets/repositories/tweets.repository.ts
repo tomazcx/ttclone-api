@@ -107,7 +107,11 @@ export class TweetsRepository implements AbstractTweetsRepository {
 				userId
 			},
 			include: {
-				savedTweet: true
+				savedTweet: {
+					include: {
+						author: true
+					}
+				},
 			}
 		}) as any
 
@@ -118,7 +122,10 @@ export class TweetsRepository implements AbstractTweetsRepository {
 
 	public async showTweet(id: string): Promise<Tweet> {
 		const tweet = await this.prisma.tweet.findFirst({
-			where: {id}
+			where: {id},
+			include: {
+				author: true
+			}
 		})
 
 		return tweet
@@ -130,7 +137,11 @@ export class TweetsRepository implements AbstractTweetsRepository {
 				userId
 			},
 			include: {
-				tweet: true
+				tweet: {
+					include: {
+						author: true
+					}
+				}
 			}
 		})
 

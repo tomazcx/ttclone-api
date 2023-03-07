@@ -1,10 +1,11 @@
+import {AbstractShowUser} from 'src/domain/users/services/abstract-show-user.service'
 import {NotFoundError} from 'src/infra/common/errors/types/NotFoundError'
 import {v4 as uuid} from 'uuid'
 import {ShowUserService} from '.'
 
 describe('ShowUserService', () => {
 
-	let showUserService: ShowUserService
+	let showUserService: AbstractShowUser
 	let date: Date
 	let id: string
 
@@ -29,7 +30,6 @@ describe('ShowUserService', () => {
 			showUser: jest.fn().mockReturnValue(Promise.resolve(expectedOutput))
 		}
 
-		//@ts-expect-error defined part of methods
 		showUserService['usersRepository'] = mockUsersRepository
 
 		const result = await showUserService.execute(id)
@@ -44,7 +44,6 @@ describe('ShowUserService', () => {
 			checkId: jest.fn().mockReturnValue(Promise.resolve(false))
 		}
 
-		//@ts-expect-error defined part of methods
 		showUserService['usersRepository'] = mockUsersRepository
 
 		await expect(showUserService.execute(id)).rejects.toThrow(NotFoundError)

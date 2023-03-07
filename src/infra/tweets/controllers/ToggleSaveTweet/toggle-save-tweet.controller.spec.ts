@@ -1,5 +1,4 @@
 import {Test, TestingModule} from "@nestjs/testing"
-import {ToggleSaveTweetService} from "src/application/tweets/services/ToggleSaveTweetService"
 import {v4 as uuid} from 'uuid'
 import * as request from 'supertest'
 import {INestApplication} from "@nestjs/common"
@@ -11,11 +10,12 @@ import {JwtModule} from "@nestjs/jwt"
 import 'dotenv/config'
 import {NotFoundError} from "src/infra/common/errors/types/NotFoundError"
 import {NotFoundInterceptor} from "src/infra/common/errors/interceptors/not-found.interceptor"
+import {AbstractToggleSaveTweet} from "src/domain/tweets/services/abstract-toggle-save-tweet.service"
 
 describe('ToggleSaveTweetController', () => {
 
 	let controller: ToggleSaveTweetController
-	let service: ToggleSaveTweetService
+	let service: AbstractToggleSaveTweet
 	let app: INestApplication
 	let userWhoSavedId: string
 	let tweetId: string
@@ -37,7 +37,7 @@ describe('ToggleSaveTweetController', () => {
 			controllers: [ToggleSaveTweetController],
 			providers: [
 				{
-					provide: ToggleSaveTweetService,
+					provide: AbstractToggleSaveTweet,
 					useValue: {
 						execute: x => x
 					},
@@ -53,7 +53,7 @@ describe('ToggleSaveTweetController', () => {
 		}).compile()
 
 		controller = module.get<ToggleSaveTweetController>(ToggleSaveTweetController)
-		service = module.get<ToggleSaveTweetService>(ToggleSaveTweetService)
+		service = module.get<AbstractToggleSaveTweet>(AbstractToggleSaveTweet)
 
 		jwt = generateJwt(userWhoSavedId)
 

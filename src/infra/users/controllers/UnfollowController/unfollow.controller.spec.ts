@@ -1,7 +1,6 @@
-import {INestApplication, UnprocessableEntityException} from "@nestjs/common"
+import {INestApplication} from "@nestjs/common"
 import {Test, TestingModule} from "@nestjs/testing"
 import {ValidateUserService} from "src/application/auth/services/ValidateUserService"
-import {UnfollowService} from "src/application/users/services/UnfollowService"
 import {JwtStrategy} from "src/infra/auth/strategies/jwt.strategy"
 import {v4 as uuid} from 'uuid'
 import {UnfollowController} from "."
@@ -13,11 +12,12 @@ import {JwtModule} from "@nestjs/jwt"
 import {NotFoundInterceptor} from "src/infra/common/errors/interceptors/not-found.interceptor"
 import {UnprocessableEntityInterceptor} from "src/infra/common/errors/interceptors/unprocessable-entity.interceptor"
 import {UnprocessableEntityError} from "src/infra/common/errors/types/UnprocessableEntityError"
+import {AbstractUnfollow} from "src/domain/users/services/abstract-unfollow.service"
 
 
 describe('Unfollow controller', () => {
 
-	let service: UnfollowService
+	let service: AbstractUnfollow
 	let controller: UnfollowController
 	let app: INestApplication
 	let id: string
@@ -39,7 +39,7 @@ describe('Unfollow controller', () => {
 			],
 			controllers: [UnfollowController],
 			providers: [{
-				provide: UnfollowService,
+				provide: AbstractUnfollow,
 				useValue: {
 					execute: x => x
 				}
@@ -60,7 +60,7 @@ describe('Unfollow controller', () => {
 		app.useGlobalInterceptors(new UnprocessableEntityInterceptor)
 
 		controller = module.get<UnfollowController>(UnfollowController)
-		service = module.get<UnfollowService>(UnfollowService)
+		service = module.get<AbstractUnfollow>(AbstractUnfollow)
 
 		await app.init()
 

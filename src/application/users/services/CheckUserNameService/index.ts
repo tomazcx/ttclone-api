@@ -1,13 +1,13 @@
 import {Inject, Injectable} from "@nestjs/common";
 import {UserName} from "src/domain/users/entities/UserName";
+import {AbstractUsersRepository} from "src/domain/users/repositories/abstract-users.repository";
 import {AbstractCheckUserName} from "src/domain/users/services/abstract-check-user-name.service";
-import {UsersRepository} from "../../repositories/users.repository";
 
 @Injectable()
 export class CheckUserNameService implements AbstractCheckUserName {
 
 	@Inject()
-	private usersRepository: UsersRepository
+	private usersRepository: AbstractUsersRepository
 
 	public async execute(user: string): Promise<UserName> {
 

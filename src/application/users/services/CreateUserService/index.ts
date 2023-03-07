@@ -3,14 +3,14 @@ import {Inject, Injectable} from "@nestjs/common"; import {User} from
 import {AbstractCreateUser} from "src/domain/users/services/abstract-create-user.service";
 import {BadRequestError} from "src/infra/common/errors/types/BadRequestError";
 import {CreateUserDto} from "../../dto/create-user.dto";
-import {UsersRepository} from "../../repositories/users.repository";
 import * as bcrypt from 'bcrypt'
+import {AbstractUsersRepository} from "src/domain/users/repositories/abstract-users.repository";
 
 @Injectable()
 export class CreateUserService implements AbstractCreateUser {
 
 	@Inject()
-	private usersRepository: UsersRepository
+	private usersRepository: AbstractUsersRepository
 
 	public async execute(createUserDto: CreateUserDto): Promise<User> {
 		if (createUserDto.user.charAt(0) !== '@') {

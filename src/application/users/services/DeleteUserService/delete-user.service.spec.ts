@@ -2,10 +2,11 @@ import {NotFoundError} from 'src/infra/common/errors/types/NotFoundError'
 import {v4 as uuid} from 'uuid'
 import {DeleteUserService} from '.'
 import * as fs from 'fs'
+import {AbstractDeleteUser} from 'src/domain/users/services/abstract-delete-user.service'
 
 describe('DeleteUserService', () => {
 
-	let service: DeleteUserService
+	let service: AbstractDeleteUser
 	let id: string
 
 	beforeEach(() => {
@@ -36,7 +37,6 @@ describe('DeleteUserService', () => {
 			deleteUser: jest.fn().mockReturnValue(Promise.resolve())
 		}
 
-		//@ts-expect-error defined part of methods
 		service['usersRepository'] = mockUsersRepository
 
 		await service.execute(id)
@@ -52,7 +52,6 @@ describe('DeleteUserService', () => {
 			checkId: jest.fn().mockReturnValue(Promise.resolve(false)),
 		}
 
-		//@ts-expect-error defined part of methods
 		service['usersRepository'] = mockUsersRepository
 
 		await expect(service.execute(id)).rejects.toBeInstanceOf(NotFoundError)

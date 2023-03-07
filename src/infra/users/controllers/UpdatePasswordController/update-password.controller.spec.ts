@@ -1,6 +1,5 @@
-import {BadRequestException, INestApplication, NotFoundException, UnprocessableEntityException} from "@nestjs/common"
+import {INestApplication, UnprocessableEntityException} from "@nestjs/common"
 import {Test, TestingModule} from "@nestjs/testing"
-import {UpdatePasswordService} from "src/application/users/services/UpdatePasswordService"
 import {User} from "src/domain/users/entities/User"
 import {UpdatePasswordController} from "."
 import * as request from 'supertest'
@@ -15,12 +14,13 @@ import {BadRequestError} from "src/infra/common/errors/types/BadRequestError"
 import {NotFoundInterceptor} from "src/infra/common/errors/interceptors/not-found.interceptor"
 import {BadRequestInterceptor} from "src/infra/common/errors/interceptors/bad-request.interceptor"
 import {UnprocessableEntityInterceptor} from "src/infra/common/errors/interceptors/unprocessable-entity.interceptor"
+import {AbstractUpdatePassword} from "src/domain/users/services/abstract-update-password.service"
 
 
 describe('UpdatePasswordController', () => {
 
 	let controller: UpdatePasswordController
-	let service: UpdatePasswordService
+	let service: AbstractUpdatePassword
 	let app: INestApplication
 	let id: string
 	let token: string
@@ -41,7 +41,7 @@ describe('UpdatePasswordController', () => {
 			controllers: [UpdatePasswordController],
 			providers: [
 				{
-					provide: UpdatePasswordService,
+					provide: AbstractUpdatePassword,
 					useValue: {
 						execute: (x => x)
 					}
@@ -65,7 +65,7 @@ describe('UpdatePasswordController', () => {
 		app.useGlobalInterceptors(new UnprocessableEntityInterceptor)
 
 		controller = module.get<UpdatePasswordController>(UpdatePasswordController)
-		service = module.get<UpdatePasswordService>(UpdatePasswordService)
+		service = module.get<AbstractUpdatePassword>(AbstractUpdatePassword)
 
 		await app.init()
 	})

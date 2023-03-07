@@ -1,10 +1,11 @@
+import {AbstractUpdateProfile} from 'src/domain/users/services/abstract-update-profile.service'
 import {NotFoundError} from 'src/infra/common/errors/types/NotFoundError'
 import {v4 as uuid} from 'uuid'
 import {UpdateProfileService} from '.'
 
 describe('UpdateProfileService', () => {
 
-	let service: UpdateProfileService
+	let service: AbstractUpdateProfile
 	let id: string
 
 	beforeEach(() => {
@@ -28,7 +29,6 @@ describe('UpdateProfileService', () => {
 			updateProfile: jest.fn().mockReturnValue(Promise.resolve(expectedOutput))
 		}
 
-		//@ts-expect-error defined part of methods
 		service['usersRepository'] = mockUsersRepository
 
 		const updateProfileDto = {
@@ -51,7 +51,6 @@ describe('UpdateProfileService', () => {
 			checkId: jest.fn().mockReturnValue(Promise.resolve(false)),
 		}
 
-		//@ts-expect-error defined part of methods
 		service['usersRepository'] = mockUsersRepository
 
 		const updateProfileDto = {

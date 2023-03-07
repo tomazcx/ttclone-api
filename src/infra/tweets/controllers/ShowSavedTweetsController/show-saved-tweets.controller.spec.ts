@@ -1,5 +1,4 @@
 import {Test, TestingModule} from "@nestjs/testing"
-import {ShowSavedTweetsService} from "src/application/tweets/services/ShowSavedTweetsService"
 import {v4 as uuid} from 'uuid'
 import * as request from 'supertest'
 import {INestApplication} from "@nestjs/common"
@@ -12,11 +11,12 @@ import 'dotenv/config'
 import {NotFoundError} from "src/infra/common/errors/types/NotFoundError"
 import {NotFoundInterceptor} from "src/infra/common/errors/interceptors/not-found.interceptor"
 import {Tweet} from "src/domain/tweets/entities/Tweet"
+import {AbstractShowSavedTweets} from "src/domain/tweets/services/abstract-show-saved-tweets.service"
 
 describe('ShowSavedTweetsController', () => {
 
 	let controller: ShowSavedTweetsController
-	let service: ShowSavedTweetsService
+	let service: AbstractShowSavedTweets
 	let app: INestApplication
 	let userId: string
 	let jwt: string
@@ -36,7 +36,7 @@ describe('ShowSavedTweetsController', () => {
 			controllers: [ShowSavedTweetsController],
 			providers: [
 				{
-					provide: ShowSavedTweetsService,
+					provide: AbstractShowSavedTweets,
 					useValue: {
 						execute: x => x
 					},
@@ -52,7 +52,7 @@ describe('ShowSavedTweetsController', () => {
 		}).compile()
 
 		controller = module.get<ShowSavedTweetsController>(ShowSavedTweetsController)
-		service = module.get<ShowSavedTweetsService>(ShowSavedTweetsService)
+		service = module.get<AbstractShowSavedTweets>(AbstractShowSavedTweets)
 
 		jwt = generateJwt(userId)
 

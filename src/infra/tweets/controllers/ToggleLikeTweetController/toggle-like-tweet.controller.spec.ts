@@ -1,5 +1,4 @@
 import {Test, TestingModule} from "@nestjs/testing"
-import {ToggleLikeTweetService} from "src/application/tweets/services/ToggleLikeTweetService"
 import {v4 as uuid} from 'uuid'
 import * as request from 'supertest'
 import {INestApplication} from "@nestjs/common"
@@ -11,11 +10,12 @@ import {JwtModule} from "@nestjs/jwt"
 import 'dotenv/config'
 import {NotFoundError} from "src/infra/common/errors/types/NotFoundError"
 import {NotFoundInterceptor} from "src/infra/common/errors/interceptors/not-found.interceptor"
+import {AbstractToggleLikeTweet} from "src/domain/tweets/services/abstract-toggle-like-tweet.service"
 
 describe('ToggleLikeTweetController', () => {
 
 	let controller: ToggleLikeTweetController
-	let service: ToggleLikeTweetService
+	let service: AbstractToggleLikeTweet
 	let app: INestApplication
 	let userWhoLikesId: string
 	let tweetId: string
@@ -37,7 +37,7 @@ describe('ToggleLikeTweetController', () => {
 			controllers: [ToggleLikeTweetController],
 			providers: [
 				{
-					provide: ToggleLikeTweetService,
+					provide: AbstractToggleLikeTweet,
 					useValue: {
 						execute: x => x
 					},
@@ -53,7 +53,7 @@ describe('ToggleLikeTweetController', () => {
 		}).compile()
 
 		controller = module.get<ToggleLikeTweetController>(ToggleLikeTweetController)
-		service = module.get<ToggleLikeTweetService>(ToggleLikeTweetService)
+		service = module.get<AbstractToggleLikeTweet>(AbstractToggleLikeTweet)
 
 		jwt = generateJwt(userWhoLikesId)
 

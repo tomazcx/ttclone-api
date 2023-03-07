@@ -1,16 +1,16 @@
 import {INestApplication} from "@nestjs/common"
 import {Test, TestingModule} from "@nestjs/testing"
-import {ShowWhoRetweetedService} from "src/application/tweets/services/ShowWhoRetweetedService"
 import {NotFoundInterceptor} from "src/infra/common/errors/interceptors/not-found.interceptor"
 import * as request from 'supertest'
 import {v4 as uuid} from 'uuid'
 import {NotFoundError} from 'src/infra/common/errors/types/NotFoundError'
 import {ShowWhoRetweetedController} from "."
 import {User} from "src/domain/users/entities/User"
+import {AbstractShowWhoRetweeted} from "src/domain/tweets/services/abstract-show-who-retweeted.service"
 
 describe('ShowWhoRetweetedController', () => {
 
-	let service: ShowWhoRetweetedService
+	let service: AbstractShowWhoRetweeted
 	let controller: ShowWhoRetweetedController
 	let app: INestApplication
 
@@ -19,7 +19,7 @@ describe('ShowWhoRetweetedController', () => {
 			controllers: [ShowWhoRetweetedController],
 			providers: [
 				{
-					provide: ShowWhoRetweetedService,
+					provide: AbstractShowWhoRetweeted,
 					useValue: {
 						execute: x => x
 					}
@@ -31,7 +31,7 @@ describe('ShowWhoRetweetedController', () => {
 		app.useGlobalInterceptors(new NotFoundInterceptor)
 
 		controller = module.get<ShowWhoRetweetedController>(ShowWhoRetweetedController)
-		service = module.get<ShowWhoRetweetedService>(ShowWhoRetweetedService)
+		service = module.get<AbstractShowWhoRetweeted>(AbstractShowWhoRetweeted)
 
 		await app.init()
 	})

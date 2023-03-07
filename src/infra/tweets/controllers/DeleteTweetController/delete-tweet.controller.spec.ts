@@ -1,5 +1,4 @@
 import {Test, TestingModule} from "@nestjs/testing"
-import {DeleteTweetService} from "src/application/tweets/services/DeleteTweetService"
 import {v4 as uuid} from 'uuid'
 import * as request from 'supertest'
 import {INestApplication} from "@nestjs/common"
@@ -13,11 +12,12 @@ import {NotFoundError} from "src/infra/common/errors/types/NotFoundError"
 import {NotFoundInterceptor} from "src/infra/common/errors/interceptors/not-found.interceptor"
 import {ForbiddenError} from "src/infra/common/errors/types/ForbiddenError"
 import {ForbiddenInterceptor} from "src/infra/common/errors/interceptors/forbidden.interceptor"
+import {AbstractDeleteTweet} from "src/domain/tweets/services/abstract-delete-tweet.service"
 
 describe('DeleteTweetController', () => {
 
 	let controller: DeleteTweetController
-	let service: DeleteTweetService
+	let service: AbstractDeleteTweet
 	let app: INestApplication
 	let authorId: string
 	let tweetId: string
@@ -39,7 +39,7 @@ describe('DeleteTweetController', () => {
 			controllers: [DeleteTweetController],
 			providers: [
 				{
-					provide: DeleteTweetService,
+					provide: AbstractDeleteTweet,
 					useValue: {
 						execute: x => x
 					},
@@ -55,7 +55,7 @@ describe('DeleteTweetController', () => {
 		}).compile()
 
 		controller = module.get<DeleteTweetController>(DeleteTweetController)
-		service = module.get<DeleteTweetService>(DeleteTweetService)
+		service = module.get<AbstractDeleteTweet>(AbstractDeleteTweet)
 
 		jwt = generateJwt(authorId)
 

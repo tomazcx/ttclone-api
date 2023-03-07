@@ -1,9 +1,10 @@
+import {AbstractShowUsersByUserName} from 'src/domain/users/services/abstract-show-users-by-user-name.service'
 import {v4 as uuid} from 'uuid'
 import {ShowUsersByUserNameService} from '.'
 
 describe('ShowUsersByUserNameService', () => {
 
-	let showUsersByUserNameService: ShowUsersByUserNameService
+	let showUsersByUserNameService: AbstractShowUsersByUserName
 	let date: Date
 	let id: string
 
@@ -28,7 +29,6 @@ describe('ShowUsersByUserNameService', () => {
 			showUsersByUserName: jest.fn().mockReturnValue(Promise.resolve(expectedOutput)),
 		}
 
-		//@ts-expect-error defined part of methods
 		showUsersByUserNameService['usersRepository'] = mockUsersRepository
 
 		const result = await showUsersByUserNameService.execute('@test')

@@ -1,13 +1,13 @@
 import {Body, Request, Controller, HttpCode, HttpStatus, Patch, UseGuards} from "@nestjs/common";
 import {AuthGuard} from "@nestjs/passport";
 import {UpdatePasswordDto} from "src/application/users/dto/update-password.dto";
-import {UpdatePasswordService} from "src/application/users/services/UpdatePasswordService";
+import {AbstractUpdatePassword} from "src/domain/users/services/abstract-update-password.service";
 
 @Controller('users')
 export class UpdatePasswordController {
 
 	constructor(
-		private readonly updatePasswordService: UpdatePasswordService
+		private readonly updatePasswordService: AbstractUpdatePassword
 	) {}
 
 	@Patch('/password')

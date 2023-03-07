@@ -1,12 +1,12 @@
 import {Request, Controller, Delete, HttpCode, HttpStatus, UseGuards} from "@nestjs/common";
 import {AuthGuard} from "@nestjs/passport";
-import {DeleteUserService} from "src/application/users/services/DeleteUserService";
+import {AbstractDeleteUser} from "src/domain/users/services/abstract-delete-user.service";
 
 @Controller('users')
 export class DeleteUserController {
 
 	constructor(
-		private readonly deleteUserService: DeleteUserService
+		private readonly deleteUserService: AbstractDeleteUser
 	) {}
 
 	@Delete()

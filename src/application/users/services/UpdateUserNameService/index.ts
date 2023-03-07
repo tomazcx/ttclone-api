@@ -3,14 +3,14 @@ import {NotFoundError} from 'src/infra/common/errors/types/NotFoundError'
 import {User} from "src/domain/users/entities/User";
 import {AbstractUpdateUserName} from "src/domain/users/services/abstract-update-user-name.service";
 import {UpdateUserNameDto} from "../../dto/update-user-name.dto";
-import {UsersRepository} from "../../repositories/users.repository";
 import {UnprocessableEntityError} from "src/infra/common/errors/types/UnprocessableEntityError";
+import {AbstractUsersRepository} from "src/domain/users/repositories/abstract-users.repository";
 
 @Injectable()
 export class UpdateUserNameService implements AbstractUpdateUserName {
 
 	@Inject()
-	private usersRepository: UsersRepository
+	private usersRepository: AbstractUsersRepository
 
 	public async execute({user}: UpdateUserNameDto, id: string): Promise<User> {
 		if (user.charAt(0) !== '@') {

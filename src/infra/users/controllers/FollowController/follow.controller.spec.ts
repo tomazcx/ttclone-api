@@ -1,5 +1,4 @@
 import {Test, TestingModule} from "@nestjs/testing"
-import {FollowService} from "src/application/users/services/FollowService"
 import {FollowController} from "."
 import {v4 as uuid} from 'uuid'
 import {INestApplication} from "@nestjs/common"
@@ -13,11 +12,12 @@ import {UnprocessableEntityError} from "src/infra/common/errors/types/Unprocessa
 import {UnprocessableEntityInterceptor} from "src/infra/common/errors/interceptors/unprocessable-entity.interceptor"
 import {NotFoundError} from "src/infra/common/errors/types/NotFoundError"
 import {generateJwt} from "src/application/auth/utils/generate-jwt.util"
+import {AbstractFollow} from "src/domain/users/services/abstract-follow.service"
 
 describe('FollowController', () => {
 
 	let followController: FollowController
-	let followService: FollowService
+	let followService: AbstractFollow
 	let app: INestApplication
 	let id: string
 	let token: string
@@ -36,7 +36,7 @@ describe('FollowController', () => {
 				})
 			],
 			providers: [{
-				provide: FollowService,
+				provide: AbstractFollow,
 				useValue: {
 					execute: (x => x)
 				}
@@ -53,7 +53,7 @@ describe('FollowController', () => {
 		}).compile()
 
 		followController = module.get<FollowController>(FollowController)
-		followService = module.get<FollowService>(FollowService)
+		followService = module.get<AbstractFollow>(AbstractFollow)
 
 		app = module.createNestApplication()
 		app.useGlobalInterceptors(new NotFoundInterceptor)

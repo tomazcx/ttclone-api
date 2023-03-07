@@ -1,11 +1,11 @@
 import {Controller, Get, HttpCode, HttpStatus, Param} from "@nestjs/common";
-import {ShowTweetService} from "src/application/tweets/services/ShowTweetService";
+import {AbstractShowTweet} from "src/domain/tweets/services/abstract-show-tweet.service";
 
 @Controller('tweets')
 export class ShowTweetController {
 
 	constructor(
-		private readonly showTweetService: ShowTweetService
+		private readonly showTweetService: AbstractShowTweet
 	) {}
 
 	@Get('/:id')

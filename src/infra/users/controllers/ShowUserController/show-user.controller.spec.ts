@@ -1,5 +1,4 @@
 import {Test, TestingModule} from '@nestjs/testing';
-import {ShowUserService} from 'src/application/users/services/ShowUserService';
 import {ShowUserController} from '.'
 import {v4 as uuid} from 'uuid'
 import {INestApplication} from '@nestjs/common';
@@ -7,10 +6,11 @@ import {NotFoundInterceptor} from 'src/infra/common/errors/interceptors/not-foun
 import {User} from "src/domain/users/entities/User"
 import * as request from 'supertest'
 import {NotFoundError} from "src/infra/common/errors/types/NotFoundError"
+import {AbstractShowUser} from 'src/domain/users/services/abstract-show-user.service';
 
 describe('ShowUserController', () => {
 	let controller: ShowUserController;
-	let showUserService: ShowUserService
+	let showUserService: AbstractShowUser
 	let app: INestApplication
 	let id: string
 
@@ -18,7 +18,7 @@ describe('ShowUserController', () => {
 		const module: TestingModule = await Test.createTestingModule({
 			controllers: [ShowUserController],
 			providers: [{
-				provide: ShowUserService,
+				provide: AbstractShowUser,
 				useValue: {
 					execute: (x => x)
 				}
@@ -29,7 +29,7 @@ describe('ShowUserController', () => {
 		app.useGlobalInterceptors(new NotFoundInterceptor)
 
 		controller = module.get<ShowUserController>(ShowUserController);
-		showUserService = module.get<ShowUserService>(ShowUserService)
+		showUserService = module.get<AbstractShowUser>(AbstractShowUser)
 
 		await app.init()
 

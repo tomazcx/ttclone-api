@@ -1,13 +1,13 @@
 import {Body, Request, Controller, HttpCode, HttpStatus, Put, UseGuards} from "@nestjs/common";
 import {AuthGuard} from "@nestjs/passport";
 import {UpdateProfileDto} from "src/application/users/dto/update-profile.dto";
-import {UpdateProfileService} from "src/application/users/services/UpdateProfileService";
+import {AbstractUpdateProfile} from "src/domain/users/services/abstract-update-profile.service";
 
 @Controller('users')
 export class UpdateProfileController {
 
 	constructor(
-		private readonly updateProfileService: UpdateProfileService
+		private readonly updateProfileService: AbstractUpdateProfile
 	) {}
 
 	@Put()

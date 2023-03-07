@@ -1,20 +1,20 @@
 import {INestApplication} from "@nestjs/common"
 import {Test, TestingModule} from "@nestjs/testing"
-import {CheckUserNameService} from "src/application/users/services/CheckUserNameService"
 import {CheckUserNameController} from "."
 import * as request from 'supertest'
+import {AbstractCheckUserName} from "src/domain/users/services/abstract-check-user-name.service"
 
 describe('CheckUserNameController', () => {
 
 	let controller: CheckUserNameController
-	let service: CheckUserNameService
+	let service: AbstractCheckUserName
 	let app: INestApplication
 
 	beforeEach(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			controllers: [CheckUserNameController],
 			providers: [{
-				provide: CheckUserNameService,
+				provide: AbstractCheckUserName,
 				useValue: {
 					execute: x => x
 				}
@@ -22,7 +22,7 @@ describe('CheckUserNameController', () => {
 		}).compile()
 
 		controller = module.get<CheckUserNameController>(CheckUserNameController)
-		service = module.get<CheckUserNameService>(CheckUserNameService)
+		service = module.get<AbstractCheckUserName>(AbstractCheckUserName)
 
 		app = module.createNestApplication()
 		await app.init()

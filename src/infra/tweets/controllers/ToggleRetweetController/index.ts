@@ -1,13 +1,12 @@
 import {Controller, Request, HttpCode, HttpStatus, Param, Put, UseGuards} from "@nestjs/common";
 import {AuthGuard} from "@nestjs/passport";
-import {get} from "http";
-import {ToggleRetweetService} from "src/application/tweets/services/ToggleRetweetService";
+import {AbstractToggleRetweet} from "src/domain/tweets/services/abstract-toggle-retweet.service";
 
 @Controller('tweets')
 export class ToggleRetweetController {
 
 	constructor(
-		private toggleRetweetService: ToggleRetweetService
+		private toggleRetweetService: AbstractToggleRetweet
 	) {}
 
 	@Put('/retweet/:id')

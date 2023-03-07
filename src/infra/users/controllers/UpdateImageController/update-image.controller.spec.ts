@@ -1,6 +1,5 @@
 import {INestApplication} from "@nestjs/common"
 import {Test, TestingModule} from "@nestjs/testing"
-import {UpdateImageService} from "src/application/users/services/UpdateImageService"
 import {User} from "src/domain/users/entities/User"
 import {UpdateImageController} from "."
 import {v4 as uuid} from 'uuid'
@@ -12,11 +11,12 @@ import {ValidateUserService} from "src/application/auth/services/ValidateUserSer
 import {JwtStrategy} from "src/infra/auth/strategies/jwt.strategy"
 import {generateJwt} from "src/application/auth/utils/generate-jwt.util"
 import {NotFoundInterceptor} from "src/infra/common/errors/interceptors/not-found.interceptor"
+import {AbstractUpdateImage} from "src/domain/users/services/abstract-update-image.service"
 
 describe('UpdateImageController', () => {
 
 	let controller: UpdateImageController
-	let service: UpdateImageService
+	let service: AbstractUpdateImage
 	let app: INestApplication
 	let id: string
 	let token: string
@@ -35,7 +35,7 @@ describe('UpdateImageController', () => {
 			],
 			controllers: [UpdateImageController],
 			providers: [{
-				provide: UpdateImageService,
+				provide: AbstractUpdateImage,
 				useValue: {
 					execute: (x => x)
 				}
@@ -55,7 +55,7 @@ describe('UpdateImageController', () => {
 		app.useGlobalInterceptors(new NotFoundInterceptor)
 
 		controller = module.get<UpdateImageController>(UpdateImageController)
-		service = module.get<UpdateImageService>(UpdateImageService)
+		service = module.get<AbstractUpdateImage>(AbstractUpdateImage)
 
 		await app.init()
 	})

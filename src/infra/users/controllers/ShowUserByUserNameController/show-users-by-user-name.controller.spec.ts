@@ -1,15 +1,15 @@
 import {Test, TestingModule} from "@nestjs/testing"
-import {ShowUsersByUserNameService} from "src/application/users/services/ShowUsersByUserNameService"
 import {ShowUsersByUserNameController} from "."
 import {v4 as uuid} from 'uuid'
 import {INestApplication} from "@nestjs/common"
 import * as request from 'supertest'
 import {User} from "src/domain/users/entities/User"
+import {AbstractShowUsersByUserName} from "src/domain/users/services/abstract-show-users-by-user-name.service"
 
 describe("ShowUserByUserNameController", () => {
 
 	let controller: ShowUsersByUserNameController
-	let service: ShowUsersByUserNameService
+	let service: AbstractShowUsersByUserName
 	let app: INestApplication
 	let id: string
 
@@ -17,7 +17,7 @@ describe("ShowUserByUserNameController", () => {
 		const module: TestingModule = await Test.createTestingModule({
 			controllers: [ShowUsersByUserNameController],
 			providers: [{
-				provide: ShowUsersByUserNameService,
+				provide: AbstractShowUsersByUserName,
 				useValue: {
 					execute: (x => x)
 				}
@@ -27,7 +27,7 @@ describe("ShowUserByUserNameController", () => {
 		app = module.createNestApplication()
 
 		controller = module.get<ShowUsersByUserNameController>(ShowUsersByUserNameController)
-		service = module.get<ShowUsersByUserNameService>(ShowUsersByUserNameService)
+		service = module.get<AbstractShowUsersByUserName>(AbstractShowUsersByUserName)
 
 		await app.init()
 

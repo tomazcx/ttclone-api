@@ -1,13 +1,13 @@
 import {Body, Controller, HttpCode, HttpStatus, Post, UseGuards, Request} from "@nestjs/common";
 import {AuthGuard} from "@nestjs/passport";
 import {CreateTweetDto} from "src/application/tweets/dto/create-tweet.dto";
-import {CreateTweetService} from "src/application/tweets/services/CreateTweetService";
+import {AbstractCreateTweet} from "src/domain/tweets/services/abstract-create-tweet.service";
 
 @Controller('tweets')
 export class CreateTweetController {
 
 	constructor(
-		private readonly createTweetService: CreateTweetService
+		private readonly createTweetService: AbstractCreateTweet
 	) {}
 
 	@Post()

@@ -1,10 +1,11 @@
+import {AbstractCreateUser} from 'src/domain/users/services/abstract-create-user.service'
 import {BadRequestError} from 'src/infra/common/errors/types/BadRequestError'
 import {v4 as uuid} from 'uuid'
 import {CreateUserService} from '.'
 
 describe('CreateUserService', () => {
 
-	let createUserService: CreateUserService
+	let createUserService: AbstractCreateUser
 	let date: Date
 	let id: string
 
@@ -38,7 +39,6 @@ describe('CreateUserService', () => {
 			checkUserName: jest.fn().mockReturnValue(Promise.resolve(false))
 		}
 
-		//@ts-expect-error defined part of methods
 		createUserService['usersRepository'] = mockUsersRepository
 
 		const result = await createUserService.execute(createUserDto)
@@ -64,7 +64,6 @@ describe('CreateUserService', () => {
 			checkUserName: jest.fn().mockReturnValue(Promise.resolve(false))
 		}
 
-		//@ts-expect-error defined part of methods
 		createUserService['usersRepository'] = mockUsersRepository
 
 		await expect(createUserService.execute(createUserDto)).rejects.toThrow(BadRequestError)
@@ -86,7 +85,6 @@ describe('CreateUserService', () => {
 			checkUserName: jest.fn().mockReturnValue(Promise.resolve(false))
 		}
 
-		//@ts-expect-error defined part of methods
 		createUserService['usersRepository'] = mockUsersRepository
 
 		await expect(createUserService.execute(createUserDto)).rejects.toThrow(BadRequestError)
@@ -108,7 +106,6 @@ describe('CreateUserService', () => {
 			checkUserName: jest.fn().mockReturnValue(Promise.resolve(true))
 		}
 
-		//@ts-expect-error defined part of methods
 		createUserService['usersRepository'] = mockUsersRepository
 
 		await expect(createUserService.execute(createUserDto)).rejects.toThrow(BadRequestError)

@@ -1,11 +1,11 @@
 import {Controller, Get, HttpCode, HttpStatus, Param} from "@nestjs/common";
-import {CheckUserNameService} from "src/application/users/services/CheckUserNameService";
+import {AbstractCheckUserName} from "src/domain/users/services/abstract-check-user-name.service";
 
 @Controller('users')
 export class CheckUserNameController {
 
 	constructor(
-		private readonly checkUserNameService: CheckUserNameService
+		private readonly checkUserNameService: AbstractCheckUserName
 	) {}
 
 	@Get('/isAvailable/:user')

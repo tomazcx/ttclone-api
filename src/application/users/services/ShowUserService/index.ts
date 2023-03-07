@@ -2,13 +2,13 @@ import {Inject, Injectable} from "@nestjs/common";
 import {NotFoundError} from "src/infra/common/errors/types/NotFoundError";
 import {User} from "src/domain/users/entities/User";
 import {AbstractShowUser} from "src/domain/users/services/abstract-show-user.service";
-import {UsersRepository} from "../../repositories/users.repository";
+import {AbstractUsersRepository} from "src/domain/users/repositories/abstract-users.repository";
 
 @Injectable()
 export class ShowUserService implements AbstractShowUser {
 
 	@Inject()
-	private usersRepository: UsersRepository
+	private usersRepository: AbstractUsersRepository
 
 	public async execute(id: string): Promise<User> {
 		const user = await this.usersRepository.checkId(id)
