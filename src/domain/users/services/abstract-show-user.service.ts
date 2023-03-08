@@ -1,5 +1,5 @@
-import {User} from '../entities/User'
+import {UserTweets} from '../entities/UserTweets';
 
 export abstract class AbstractShowUser {
-	abstract execute(id: string): Promise<User>
+	abstract execute(id: string): Promise<UserTweets>
 }

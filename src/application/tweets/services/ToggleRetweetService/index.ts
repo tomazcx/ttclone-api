@@ -28,8 +28,6 @@ export class ToggleRetweetService implements AbstractToggleRetweet {
 
 		const hasBeenRetweeted = await this.tweetsRepository.verifyIfUserRetweeted(tweetId, userWhoRetweetsId)
 
-		console.log(hasBeenRetweeted)
-
 		if (hasBeenRetweeted) {
 			await this.tweetsRepository.removeRetweet(tweetId, userWhoRetweetsId)
 			return

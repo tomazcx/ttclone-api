@@ -17,10 +17,10 @@ export abstract class AbstractTweetsRepository {
 	abstract showWhoLiked(tweetId: string): Promise<User[]>
 	abstract showWhoRetweeted(tweetId: string): Promise<User[]>
 	abstract showLikedTweets(userId: string): Promise<Tweet[]>
-	abstract showUserTweets(userId: string): Promise<Tweet[]>
 	abstract saveTweet(tweetId: string, userWhoSaveId: string): Promise<void>
 	abstract removeSavedTweet(tweetId: string, userWhoSavedId: string): Promise<void>
 	abstract retweet(tweetId: string, userWhoRetweetsId: string): Promise<void>
+	abstract retweetWithComment(createTweetDto: CreateTweetDto, tweetId: string, userWhoRetweetsId: string): Promise<Tweet>
 	abstract removeRetweet(tweetId: string, userId: string): Promise<void>
 	abstract likeTweet(tweetId: string, userWhoLikesId: string): Promise<void>
 	abstract removeLikeTweet(tweetId: string, userWhoUnlikesId: string): Promise<void>

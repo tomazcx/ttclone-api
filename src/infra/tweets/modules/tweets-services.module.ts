@@ -5,7 +5,6 @@ import {DeleteTweetService} from "src/application/tweets/services/DeleteTweetSer
 import {ShowLikedTweetsService} from "src/application/tweets/services/ShowLikedTweetsService";
 import {ShowSavedTweetsService} from "src/application/tweets/services/ShowSavedTweetsService";
 import {ShowTweetService} from "src/application/tweets/services/ShowTweetService";
-import {ShowUserTweetsService} from "src/application/tweets/services/ShowUserTweetsService";
 import {ShowWhoLikedService} from "src/application/tweets/services/ShowWhoLikedService";
 import {ToggleLikeTweetService} from "src/application/tweets/services/ToggleLikeTweetService";
 import {ToggleRetweetService} from "src/application/tweets/services/ToggleRetweetService";
@@ -16,7 +15,6 @@ import {ShowWhoRetweetedService} from "src/application/tweets/services/ShowWhoRe
 import {AbstractCreateTweet} from "src/domain/tweets/services/abstract-create-tweet.service";
 import {AbstractTweetsRepository} from "src/domain/tweets/repositories/abstract-tweets.repository";
 import {AbstractUsersRepository} from "src/domain/users/repositories/abstract-users.repository";
-import {AbstractShowUserTweets} from "src/domain/tweets/services/abstract-show-user-tweets.service";
 import {AbstractShowTweet} from "src/domain/tweets/services/abstract-show-tweet.service";
 import {AbstractDeleteTweet} from "src/domain/tweets/services/abstract-delete-tweet.service";
 import {AbstractToggleLikeTweet} from "src/domain/tweets/services/abstract-toggle-like-tweet.service";
@@ -26,6 +24,8 @@ import {AbstractShowSavedTweets} from "src/domain/tweets/services/abstract-show-
 import {AbstractShowLikedTweets} from "src/domain/tweets/services/abstract-show-liked-tweets.service";
 import {AbstractToggleRetweet} from "src/domain/tweets/services/abstract-toggle-retweet.service";
 import {AbstractShowWhoRetweeted} from "src/domain/tweets/services/abstract-show-who-retweeted.service";
+import {AbstractRetweetWithComment} from "src/domain/tweets/services/abstract-retweet-with-comment.service";
+import {RetweetWithCommentService} from "src/application/tweets/services/RetweetWithCommentService";
 
 @Module({
 	providers: [
@@ -42,10 +42,6 @@ import {AbstractShowWhoRetweeted} from "src/domain/tweets/services/abstract-show
 			useClass: UsersRepository
 		},
 		{
-			provide: AbstractShowUserTweets,
-			useClass: ShowUserTweetsService
-		},
-		{
 			provide: AbstractShowTweet,
 			useClass: ShowTweetService
 		},
@@ -80,7 +76,12 @@ import {AbstractShowWhoRetweeted} from "src/domain/tweets/services/abstract-show
 		{
 			provide: AbstractShowWhoRetweeted,
 			useClass: ShowWhoRetweetedService
-		}, PrismaService
+		},
+		{
+			provide: AbstractRetweetWithComment,
+			useClass: RetweetWithCommentService
+		},
+		PrismaService
 	],
 	exports: [
 		{
@@ -96,10 +97,6 @@ import {AbstractShowWhoRetweeted} from "src/domain/tweets/services/abstract-show
 			useClass: UsersRepository
 		},
 		{
-			provide: AbstractShowUserTweets,
-			useClass: ShowUserTweetsService
-		},
-		{
 			provide: AbstractShowTweet,
 			useClass: ShowTweetService
 		},
@@ -134,7 +131,12 @@ import {AbstractShowWhoRetweeted} from "src/domain/tweets/services/abstract-show
 		{
 			provide: AbstractShowWhoRetweeted,
 			useClass: ShowWhoRetweetedService
-		}, PrismaService
+		},
+		{
+			provide: AbstractRetweetWithComment,
+			useClass: RetweetWithCommentService
+		},
+		PrismaService
 	]
 })
 export class TweetsServicesModule {}

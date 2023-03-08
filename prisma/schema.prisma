@@ -53,8 +53,8 @@ model UserSavedTweets {
   tweetId    String
   created_at DateTime
 
-  user       User  @relation("saved_by", fields: [userId], references: [id])
-  savedTweet Tweet @relation("saved_by", fields: [tweetId], references: [id])
+  user       User  @relation("saved_by", fields: [userId], references: [id], onDelete: Cascade)
+  savedTweet Tweet @relation("saved_by", fields: [tweetId], references: [id], onDelete: Cascade)
 
   @@map("user_saved_tweets")
 }
@@ -63,11 +63,10 @@ model UserRetweets {
   id         String   @id @default(uuid())
   userId     String
   tweetId    String
-  content    String?  @db.VarChar(280)
   created_at DateTime
 
-  user       User  @relation("retweeted_by", fields: [userId], references: [id])
-  tweet Tweet @relation("retweeted_by", fields: [tweetId], references: [id])
+  user  User  @relation("retweeted_by", fields: [userId], references: [id], onDelete: Cascade)
+  tweet Tweet @relation("retweeted_by", fields: [tweetId], references: [id], onDelete: Cascade)
 
   @@map("users_retweets")
 }
@@ -78,19 +77,23 @@ model UsersLikes {
   tweetId    String
   created_at DateTime
 
-  user  User  @relation("liked_by", fields: [userId], references: [id])
-  tweet Tweet @relation("liked_by", fields: [tweetId], references: [id])
+  user  User  @relation("liked_by", fields: [userId], references: [id], onDelete: Cascade)
+  tweet Tweet @relation("liked_by", fields: [tweetId], references: [id], onDelete: Cascade)
 }
 
 model Tweet {
-  id         String   @id @default(uuid())
-  authorId   String
-  content    String   @db.VarChar(280)
-  replyId    String?  @unique
-  created_at DateTime
+  id                     String   @id @default(uuid())
+  authorId               String
+  content                String   @db.VarChar(280)
+  replyId                String?  @unique
+  retweetWithCommentToId String?  @unique
+  created_at             DateTime
 
-  repliesTo Tweet?  @relation("replies_to", fields: [replyId], references: [id])
+  repliesTo Tweet?  @relation("replies_to", fields: [replyId], references: [id], onDelete: SetNull)
   replies   Tweet[] @relation("replies_to")
+
+  retweetingWithCommentTo Tweet?  @relation("retweets_to", fields: [retweetWithCommentToId], references: [id], onDelete: SetNull)
+  retweetsWithComment     Tweet[] @relation("retweets_to")
 
   author            User              @relation("tweetedBy", fields: [authorId], references: [id], onDelete: Cascade)
   usersWhoLiked     UsersLikes[]      @relation("liked_by")

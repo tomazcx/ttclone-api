@@ -1,6 +1,7 @@
 import {Injectable} from "@nestjs/common";
 import {PreUser} from "src/domain/users/entities/PreUser";
 import {User} from "src/domain/users/entities/User";
+import {UserTweets} from "src/domain/users/entities/UserTweets";
 import {AbstractUsersRepository} from "src/domain/users/repositories/abstract-users.repository";
 import {PrismaService} from "src/external/services/prisma.service";
 import {CreateUserDto} from "../dto/create-user.dto";
@@ -18,10 +19,60 @@ export class UsersRepository implements AbstractUsersRepository {
 		return !!user
 	}
 
-	public async showUser(id: string): Promise<User> {
-		const user = await this.prisma.user.findFirst({where: {id}})
+	public async showUser(id: string): Promise<UserTweets> {
+		const user = await this.prisma.user.findFirst({
+			where: {id},
+			include: {
+				tweets: {
+					include: {
+						retweetingWithCommentTo: {
+							include: {
+								author: true
+							}
+						}
+					}
+				},
+				tweetsRetweeted: {
+					include: {
+						tweet: {
+							include: {
+								author: true
+							}
+						}
+					}
+				}
+			}
+		}) as any
 		const formatedUser = excludeField(user, ['password'])
-		return formatedUser
+		return formatedUser as UserTweets
+	}
+
+	public async showUserByUserName(user: string): Promise<UserTweets> {
+		const userData = await this.prisma.user.findFirst({
+			where: {user},
+			include: {
+				tweets: {
+					include: {
+						retweetingWithCommentTo: {
+							include: {
+								author: true
+							}
+						}
+					}
+				},
+				tweetsRetweeted: {
+					include: {
+						tweet: {
+							include: {
+								author: true
+							}
+						}
+					}
+				}
+			}
+		}) as any
+		const formatedUser = excludeField(userData, ['password'])
+		return formatedUser as UserTweets
 	}
 
 	public async showUsersByUserName(user: string): Promise<User[]> {

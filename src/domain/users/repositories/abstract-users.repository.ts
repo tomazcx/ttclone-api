@@ -1,10 +1,12 @@
 import {CreateUserDto} from 'src/application/users/dto/create-user.dto';
 import {UpdateProfileDto} from 'src/application/users/dto/update-profile.dto';
 import {User} from '../entities/User'
+import {UserTweets} from '../entities/UserTweets';
 
 export abstract class AbstractUsersRepository {
 
-	abstract showUser(id: string): Promise<User>
+	abstract showUser(id: string): Promise<UserTweets>
+	abstract showUserByUserName(user: string): Promise<UserTweets>
 	abstract showUsersByUserName(user: string): Promise<User[]>
 	abstract showFollowers(id: string): Promise<User[]>
 	abstract showFollowing(id: string): Promise<User[]>

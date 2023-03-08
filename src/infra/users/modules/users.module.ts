@@ -7,8 +7,9 @@ import {DeleteUserController} from '../controllers/DeleteUserController';
 import {FollowController} from '../controllers/FollowController';
 import {ShowFollowersController} from '../controllers/ShowFollowersController';
 import {ShowFollowingController} from '../controllers/ShowFollowingController';
-import {ShowUsersByUserNameController} from '../controllers/ShowUserByUserNameController';
+import {ShowUserByUserNameController} from '../controllers/ShowUserByUserNameController';
 import {ShowUserController} from '../controllers/ShowUserController';
+import {ShowUsersByUserNameController} from '../controllers/ShowUsersByUserNameController';
 import {UnfollowController} from '../controllers/UnfollowController';
 import {UpdateBannerController} from '../controllers/UpdateBannerController';
 import {UpdateImageController} from '../controllers/UpdateImageController';
@@ -19,7 +20,7 @@ import {UserServicesModule} from './users-services.module';
 
 @Module({
 	imports: [UserServicesModule, AuthControllersModule],
-	controllers: [ShowUserController, CreateUserController, FollowController, ShowFollowersController, ShowFollowingController, ShowUsersByUserNameController, UnfollowController, UpdateUserNameController, CheckUserNameController, DeleteUserController, UpdateProfileController, UpdatePasswordController, UpdateImageController, UpdateBannerController],
+	controllers: [ShowUserController, CreateUserController, FollowController, ShowFollowersController, ShowFollowingController, ShowUsersByUserNameController, UnfollowController, UpdateUserNameController, CheckUserNameController, DeleteUserController, UpdateProfileController, UpdatePasswordController, UpdateImageController, UpdateBannerController, ShowUserByUserNameController],
 
 })
 export class UsersModule implements NestModule {

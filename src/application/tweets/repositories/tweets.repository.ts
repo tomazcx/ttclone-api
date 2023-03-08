@@ -19,6 +19,9 @@ export class TweetsRepository implements AbstractTweetsRepository {
 				content,
 				authorId,
 				created_at: new Date()
+			},
+			include: {
+				author: true
 			}
 		})
 
@@ -124,7 +127,10 @@ export class TweetsRepository implements AbstractTweetsRepository {
 		const tweet = await this.prisma.tweet.findFirst({
 			where: {id},
 			include: {
-				author: true
+				author: true,
+				retweetingWithCommentTo: true,
+				repliesTo: true,
+				replies: true
 			}
 		})
 
@@ -165,25 +171,6 @@ export class TweetsRepository implements AbstractTweetsRepository {
 		})
 
 		return usersWithouthPassword
-	}
-
-	public async showUserTweets(userId: string): Promise<Tweet[]> {
-		const tweets = await this.prisma.tweet.findMany({
-			where: {
-				author: {
-					id: userId
-				},
-				OR: {
-					usersWhoRetweeted: {
-						every: {
-							userId
-						}
-					}
-				}
-			}
-		})
-
-		return tweets
 	}
 
 	public async showWhoLiked(tweetId: string): Promise<User[]> {
@@ -289,6 +276,23 @@ export class TweetsRepository implements AbstractTweetsRepository {
 				}
 			}
 		})
+	}
+
+	public async retweetWithComment(createTweetDto: CreateTweetDto, tweetId: string, userWhoRetweetsId: string): Promise<Tweet> {
+		const tweet = await this.prisma.tweet.create({
+			data: {
+				...createTweetDto,
+				authorId: userWhoRetweetsId,
+				retweetWithCommentToId: tweetId,
+				created_at: new Date
+			},
+			include: {
+				author: true,
+				retweetingWithCommentTo: true
+			}
+		})
+
+		return tweet
 	}
 
 	public async delete(id: string): Promise<void> {

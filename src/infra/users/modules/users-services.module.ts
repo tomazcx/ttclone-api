@@ -6,6 +6,7 @@ import {DeleteUserService} from "src/application/users/services/DeleteUserServic
 import {FollowService} from "src/application/users/services/FollowService";
 import {ShowFollowersService} from "src/application/users/services/ShowFollowersService";
 import {ShowFollowingService} from "src/application/users/services/ShowFollowingService";
+import {ShowUserByUserNameService} from "src/application/users/services/ShowUserByUserName";
 import {ShowUsersByUserNameService} from "src/application/users/services/ShowUsersByUserNameService";
 import {ShowUserService} from "src/application/users/services/ShowUserService";
 import {UnfollowService} from "src/application/users/services/UnfollowService";
@@ -21,6 +22,7 @@ import {AbstractDeleteUser} from "src/domain/users/services/abstract-delete-user
 import {AbstractFollow} from "src/domain/users/services/abstract-follow.service";
 import {AbstractShowFollowers} from "src/domain/users/services/abstract-show-followers.service";
 import {AbstractShowFollowing} from "src/domain/users/services/abstract-show-following.service";
+import {AbstractShowUserByUserName} from "src/domain/users/services/abstract-show-user-by-user-name.service";
 import {AbstractShowUser} from "src/domain/users/services/abstract-show-user.service";
 import {AbstractShowUsersByUserName} from "src/domain/users/services/abstract-show-users-by-user-name.service";
 import {AbstractUnfollow} from "src/domain/users/services/abstract-unfollow.service";
@@ -93,7 +95,12 @@ import {PrismaService} from "src/external/services/prisma.service";
 		{
 			provide: AbstractUsersRepository,
 			useClass: UsersRepository
-		}, PrismaService],
+		},
+		{
+			provide: AbstractShowUserByUserName,
+			useClass: ShowUserByUserNameService
+		},
+		PrismaService],
 	exports: [
 		{
 			provide: AbstractShowUser,
@@ -155,6 +162,11 @@ import {PrismaService} from "src/external/services/prisma.service";
 		{
 			provide: AbstractUsersRepository,
 			useClass: UsersRepository
-		}, PrismaService],
+		},
+		{
+			provide: AbstractShowUserByUserName,
+			useClass: ShowUserByUserNameService
+		},
+		PrismaService],
 })
 export class UserServicesModule {}

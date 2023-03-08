@@ -1,16 +1,17 @@
 import {Controller, Get, HttpCode, HttpStatus, Param} from "@nestjs/common";
-import {AbstractShowUsersByUserName} from "src/domain/users/services/abstract-show-users-by-user-name.service";
+import {AbstractShowUserByUserName} from "src/domain/users/services/abstract-show-user-by-user-name.service";
 
 @Controller('users')
-export class ShowUsersByUserNameController {
+export class ShowUserByUserNameController {
 
 	constructor(
-		private readonly showUsersByUserNameService: AbstractShowUsersByUserName
+		private showUserByUserNameService: AbstractShowUserByUserName
 	) {}
 
-	@Get('/search/:user')
+	@Get('/user-name/:user')
 	@HttpCode(HttpStatus.OK)
 	async handle(@Param('user') user: string) {
-		return await this.showUsersByUserNameService.execute(user)
+		return await this.showUserByUserNameService.execute(user)
 	}
+
 }
