@@ -10,7 +10,7 @@ export class RetweetWithCommentController {
 		private readonly retweetWitCommentService: AbstractRetweetWithComment
 	) {}
 
-	@Post('/:id')
+	@Post('/retweet/:id')
 	@UseGuards(AuthGuard('jwt'))
 	@HttpCode(HttpStatus.CREATED)
 	async handle(@Body() createTweetDto: CreateTweetDto, @Param('id') id: string, @Request() req: any) {

@@ -112,7 +112,11 @@ export class TweetsRepository implements AbstractTweetsRepository {
 			include: {
 				savedTweet: {
 					include: {
-						author: true
+						retweetingWithCommentTo: true,
+						repliesTo: true,
+						replies: true,
+						usersWhoLiked: true,
+						usersWhoRetweeted: true
 					}
 				},
 			}
@@ -130,7 +134,9 @@ export class TweetsRepository implements AbstractTweetsRepository {
 				author: true,
 				retweetingWithCommentTo: true,
 				repliesTo: true,
-				replies: true
+				replies: true,
+				usersWhoLiked: true,
+				usersWhoRetweeted: true
 			}
 		})
 
@@ -145,7 +151,12 @@ export class TweetsRepository implements AbstractTweetsRepository {
 			include: {
 				tweet: {
 					include: {
-						author: true
+						author: true,
+						retweetingWithCommentTo: true,
+						repliesTo: true,
+						replies: true,
+						usersWhoLiked: true,
+						usersWhoRetweeted: true
 					}
 				}
 			}
@@ -293,6 +304,36 @@ export class TweetsRepository implements AbstractTweetsRepository {
 		})
 
 		return tweet
+	}
+
+	public async replyTweet(tweetId: string, authorId: string, createTweetDto: CreateTweetDto): Promise<Tweet> {
+		const tweet = await this.prisma.tweet.create({
+			data: {
+				...createTweetDto,
+				authorId,
+				retweetWithCommentToId: tweetId,
+				created_at: new Date
+			},
+			include: {
+				author: true,
+				repliesTo: true
+			}
+		})
+
+		return tweet
+	}
+
+	public async showReplies(tweetId: string): Promise<Tweet[]> {
+		const tweets = await this.prisma.tweet.findMany({
+			where: {
+				replyId: tweetId
+			},
+			include: {
+				author: true
+			}
+		})
+
+		return tweets
 	}
 
 	public async delete(id: string): Promise<void> {

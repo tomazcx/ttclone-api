@@ -5,7 +5,9 @@ export class Tweet {
 	content: string
 	authorId: string
 	created_at: Date
+	replyId: string | null
+	retweetWithCommentToId: string | null
+
 	author: User
 
-	replyId?: string
 }

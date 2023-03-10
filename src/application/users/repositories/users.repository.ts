@@ -36,7 +36,11 @@ export class UsersRepository implements AbstractUsersRepository {
 					include: {
 						tweet: {
 							include: {
-								author: true
+								retweetingWithCommentTo: true,
+								repliesTo: true,
+								replies: true,
+								usersWhoLiked: true,
+								usersWhoRetweeted: true
 							}
 						}
 					}
@@ -55,7 +59,11 @@ export class UsersRepository implements AbstractUsersRepository {
 					include: {
 						retweetingWithCommentTo: {
 							include: {
-								author: true
+								retweetingWithCommentTo: true,
+								repliesTo: true,
+								replies: true,
+								usersWhoLiked: true,
+								usersWhoRetweeted: true
 							}
 						}
 					}
@@ -64,7 +72,11 @@ export class UsersRepository implements AbstractUsersRepository {
 					include: {
 						tweet: {
 							include: {
-								author: true
+								retweetingWithCommentTo: true,
+								repliesTo: true,
+								replies: true,
+								usersWhoLiked: true,
+								usersWhoRetweeted: true
 							}
 						}
 					}

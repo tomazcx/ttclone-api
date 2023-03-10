@@ -2,7 +2,7 @@ import {Test, TestingModule} from "@nestjs/testing"
 import {v4 as uuid} from 'uuid'
 import * as request from 'supertest'
 import {INestApplication} from "@nestjs/common"
-import {RetweetWithCommentController} from "."
+import {ReplyTweetController} from "."
 import {JwtStrategy} from "src/infra/auth/strategies/jwt.strategy"
 import {generateJwt} from 'src/application/auth/utils/generate-jwt.util'
 import {ValidateUserService} from "src/application/auth/services/ValidateUserService"
@@ -11,20 +11,20 @@ import 'dotenv/config'
 import {NotFoundError} from "src/infra/common/errors/types/NotFoundError"
 import {NotFoundInterceptor} from "src/infra/common/errors/interceptors/not-found.interceptor"
 import {Tweet} from "src/domain/tweets/entities/Tweet"
-import {AbstractRetweetWithComment} from "src/domain/tweets/services/abstract-retweet-with-comment.service"
+import {AbstractReplyTweet} from "src/domain/tweets/services/abstract-reply-tweet.service"
 
-describe('RetweetWithCommentController', () => {
+describe('ReplyTweetController', () => {
 
-	let controller: RetweetWithCommentController
-	let service: AbstractRetweetWithComment
+	let controller: ReplyTweetController
+	let service: AbstractReplyTweet
 	let app: INestApplication
-	let userWhoLikesId: string
+	let authorId: string
 	let tweetId: string
 	let jwt: string
 
 	beforeAll(async () => {
 
-		userWhoLikesId = uuid()
+		authorId = uuid()
 		tweetId = uuid()
 		const module: TestingModule = await Test.createTestingModule({
 			imports: [
@@ -35,10 +35,10 @@ describe('RetweetWithCommentController', () => {
 					}
 				})
 			],
-			controllers: [RetweetWithCommentController],
+			controllers: [ReplyTweetController],
 			providers: [
 				{
-					provide: AbstractRetweetWithComment,
+					provide: AbstractReplyTweet,
 					useValue: {
 						execute: x => x
 					},
@@ -46,17 +46,17 @@ describe('RetweetWithCommentController', () => {
 				{
 					provide: ValidateUserService,
 					useValue: {
-						execute: () => Promise.resolve({id: userWhoLikesId})
+						execute: () => Promise.resolve({id: authorId})
 					}
 				},
 				JwtStrategy
 			]
 		}).compile()
 
-		controller = module.get<RetweetWithCommentController>(RetweetWithCommentController)
-		service = module.get<AbstractRetweetWithComment>(AbstractRetweetWithComment)
+		controller = module.get<ReplyTweetController>(ReplyTweetController)
+		service = module.get<AbstractReplyTweet>(AbstractReplyTweet)
 
-		jwt = generateJwt(userWhoLikesId)
+		jwt = generateJwt(authorId)
 
 		app = module.createNestApplication()
 		app.useGlobalInterceptors(new NotFoundInterceptor)
@@ -75,7 +75,7 @@ describe('RetweetWithCommentController', () => {
 			content: 'test-content'
 		}
 
-		await request(app.getHttpServer()).post(`/tweets/retweet/${tweetId}`).send(createTweetDto).set('Authorization', `Bearer ${jwt}`).expect(201)
+		await request(app.getHttpServer()).post(`/tweets/reply/${tweetId}`).send(createTweetDto).set('Authorization', `Bearer ${jwt}`).expect(201)
 	})
 
 	it('should return 404 error', async () => {
@@ -85,11 +85,11 @@ describe('RetweetWithCommentController', () => {
 			content: 'test-content'
 		}
 
-		await request(app.getHttpServer()).post(`/tweets/retweet/${tweetId}`).send(createTweetDto).set('Authorization', `Bearer ${jwt}`).expect(404)
+		await request(app.getHttpServer()).post(`/tweets/reply/${tweetId}`).send(createTweetDto).set('Authorization', `Bearer ${jwt}`).expect(404)
 	})
 
 	it('should return 401 unauthorized exception', async () => {
-		await request(app.getHttpServer()).post(`/tweets/retweet/${tweetId}`).expect(401)
+		await request(app.getHttpServer()).post(`/tweets/reply/${tweetId}`).expect(401)
 	})
 
 	afterAll(() => {
